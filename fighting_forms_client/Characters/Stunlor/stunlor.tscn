@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3gjc46y4xgkv"]
+
+[ext_resource type="Script" uid="uid://yq5piri6mjr8" path="res://Characters/Stunlor/stunlor.gd" id="1_63jpl"]
+[ext_resource type="PackedScene" uid="uid://deb6bg5qvmj7c" path="res://Characters/Stunlor/stunlor_sprite.tscn" id="1_m0e4v"]
+[ext_resource type="Texture2D" uid="uid://dhlbw4qdpkelf" path="res://Characters/Stunlor/Stunlor (FR).png" id="2_gkii0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0e4v"]
+
+[node name="Stunlor" type="Panel"]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_m0e4v")
+script = ExtResource("1_63jpl")
+
+[node name="Stunlor" parent="." instance=ExtResource("1_m0e4v")]
+position = Vector2(50, 50)
+
+[node name="Description" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-135, 146)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_gkii0")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

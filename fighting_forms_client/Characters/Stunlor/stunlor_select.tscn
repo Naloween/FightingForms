@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0t67r3m5inmk"]
+
+[ext_resource type="StyleBox" uid="uid://c0wmnludtss0n" path="res://Characters/CharacterSelectStyle.tres" id="1_ymonv"]
+[ext_resource type="Script" uid="uid://o7inxl1jb4mh" path="res://Characters/Stunlor/stunlor_select.gd" id="2_v4l38"]
+[ext_resource type="Texture2D" uid="uid://7ll454kvegjd" path="res://Characters/Stunlor/Stunlor.svg" id="3_codnb"]
+
+[node name="Stunlor" type="Panel"]
+custom_minimum_size = Vector2(100, 100)
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = ExtResource("1_ymonv")
+script = ExtResource("2_v4l38")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(49, 49)
+scale = Vector2(0.57228917, 0.57228917)
+texture = ExtResource("3_codnb")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

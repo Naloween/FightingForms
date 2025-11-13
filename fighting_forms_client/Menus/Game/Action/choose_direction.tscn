@@ -1,0 +1,148 @@
+[gd_scene load_steps=3 format=3 uid="uid://dibifrkjnkqhi"]
+
+[ext_resource type="Script" uid="uid://csdlf16vlwyok" path="res://Menus/Game/Action/choose_direction.gd" id="1_2ctmq"]
+[ext_resource type="Texture2D" uid="uid://v0bg4506l52c" path="res://assets/right_arrow.svg" id="2_topky"]
+
+[node name="ChooseDirection" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2ctmq")
+
+[node name="East" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 76.0
+offset_top = -31.0
+offset_right = 151.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+icon = ExtResource("2_topky")
+
+[node name="West" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.0
+offset_top = 30.0
+offset_right = 1.0
+offset_bottom = 91.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.1415927
+icon = ExtResource("2_topky")
+
+[node name="South" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 32.0
+offset_top = 74.0
+offset_right = 107.0
+offset_bottom = 135.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 1.5707964
+icon = ExtResource("2_topky")
+
+[node name="North" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -66.0
+offset_right = 44.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -1.5707964
+icon = ExtResource("2_topky")
+
+[node name="SouthEast" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 75.0
+offset_top = 30.00003
+offset_right = 150.0
+offset_bottom = 91.00003
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+icon = ExtResource("2_topky")
+
+[node name="NorthWest" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.0
+offset_top = -28.0
+offset_right = 1.0
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.9269907
+icon = ExtResource("2_topky")
+
+[node name="SouthWest" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -36.0
+offset_top = 77.99997
+offset_right = 39.0
+offset_bottom = 138.99997
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 2.5307274
+icon = ExtResource("2_topky")
+
+[node name="NorthEast" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 34.0
+offset_top = -70.0
+offset_right = 109.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.7853982
+icon = ExtResource("2_topky")
+
+[connection signal="pressed" from="East" to="." method="_on_east_pressed"]
+[connection signal="pressed" from="West" to="." method="_on_west_pressed"]
+[connection signal="pressed" from="South" to="." method="_on_south_pressed"]
+[connection signal="pressed" from="North" to="." method="_on_north_pressed"]
+[connection signal="pressed" from="SouthEast" to="." method="_on_south_east_pressed"]
+[connection signal="pressed" from="NorthWest" to="." method="_on_north_west_pressed"]
+[connection signal="pressed" from="SouthWest" to="." method="_on_south_west_pressed"]
+[connection signal="pressed" from="NorthEast" to="." method="_on_north_east_pressed"]

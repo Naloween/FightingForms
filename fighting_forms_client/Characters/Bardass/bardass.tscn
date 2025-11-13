@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://3ae3etkokqi1"]
+
+[ext_resource type="Script" uid="uid://by04e7ni5tx3i" path="res://Characters/Bardass/bardass.gd" id="1_s8dy2"]
+[ext_resource type="PackedScene" uid="uid://4iog4p22vljk" path="res://Characters/Bardass/bardass_sprite.tscn" id="1_yj3dl"]
+[ext_resource type="Texture2D" uid="uid://bp11mp2sdruig" path="res://Characters/Bardass/Bardass (FR).png" id="2_83qms"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yj3dl"]
+
+[node name="Bardass" type="Panel"]
+custom_minimum_size = Vector2(100, 100)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yj3dl")
+script = ExtResource("1_s8dy2")
+
+[node name="Bardass" parent="." instance=ExtResource("1_yj3dl")]
+position = Vector2(50, 50)
+
+[node name="Description" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-135, 146)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_83qms")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

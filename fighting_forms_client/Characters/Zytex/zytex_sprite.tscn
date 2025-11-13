@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://qwba270rl34l"]
+
+[ext_resource type="Texture2D" uid="uid://cqihvasaiu1gu" path="res://Characters/Zytex/Zytex.png" id="1_r1otf"]
+
+[node name="ZytexSprite" type="Sprite2D"]
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_r1otf")

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://c45ekjpoeqg2y"]
+
+[ext_resource type="Script" uid="uid://1wvvmysalae4" path="res://Characters/Zytex/zytex.gd" id="1_45vgx"]
+[ext_resource type="PackedScene" uid="uid://qwba270rl34l" path="res://Characters/Zytex/zytex_sprite.tscn" id="1_h2gwo"]
+[ext_resource type="Texture2D" uid="uid://dfeo2jcsumeqe" path="res://Characters/Zytex/Zytex (FR).png" id="2_yb871"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h2gwo"]
+
+[node name="Zytex" type="Panel"]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_h2gwo")
+script = ExtResource("1_45vgx")
+
+[node name="ZytexSprite" parent="." instance=ExtResource("1_h2gwo")]
+position = Vector2(50, 50)
+script = null
+
+[node name="Description" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-135, 146)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_yb871")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://4iog4p22vljk"]
+
+[ext_resource type="Texture2D" uid="uid://bhisf4701odes" path="res://Characters/Bardass/Bardass.svg" id="1_gth56"]
+
+[node name="Bardass" type="Sprite2D"]
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("1_gth56")

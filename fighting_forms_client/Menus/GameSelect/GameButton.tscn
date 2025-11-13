@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0wis7pf07kbi"]
+
+[ext_resource type="Script" uid="uid://bk00apgy58chl" path="res://Menus/GameSelect/game_button.gd" id="1_1ve6t"]
+
+[node name="GameButton" type="Button"]
+offset_right = 134.0
+offset_bottom = 134.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Enter Game"
+script = ExtResource("1_1ve6t")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

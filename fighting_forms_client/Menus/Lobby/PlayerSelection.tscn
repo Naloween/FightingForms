@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://ng1rsnvk3ivv"]
+
+[ext_resource type="Script" uid="uid://dfe8uo14wrshc" path="res://Menus/Lobby/player_selection.gd" id="1_6r880"]
+[ext_resource type="PackedScene" uid="uid://ckky4ic57lotc" path="res://Menus/player_icon.tscn" id="1_wkaa2"]
+[ext_resource type="PackedScene" uid="uid://3ae3etkokqi1" path="res://Characters/Bardass/bardass.tscn" id="2_6r880"]
+[ext_resource type="PackedScene" uid="uid://c3gjc46y4xgkv" path="res://Characters/Stunlor/stunlor.tscn" id="3_bivvp"]
+[ext_resource type="PackedScene" uid="uid://c45ekjpoeqg2y" path="res://Characters/Zytex/zytex.tscn" id="4_bhvi2"]
+[ext_resource type="PackedScene" uid="uid://jru443cx24d8" path="res://Characters/Empty.tscn" id="5_vsf3w"]
+
+[node name="PlayerSelection" type="VBoxContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("1_6r880")
+
+[node name="PlayerIcon" parent="." instance=ExtResource("1_wkaa2")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Bardass" parent="." instance=ExtResource("2_6r880")]
+visible = false
+layout_mode = 2
+
+[node name="Stunlor" parent="." instance=ExtResource("3_bivvp")]
+visible = false
+layout_mode = 2
+
+[node name="Zytex" parent="." instance=ExtResource("4_bhvi2")]
+visible = false
+layout_mode = 2
+
+[node name="Empty" parent="." instance=ExtResource("5_vsf3w")]
+layout_mode = 2

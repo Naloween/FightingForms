@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://di30bo402hvu"]
+
+[ext_resource type="Script" uid="uid://d0awr8g60iidi" path="res://Menus/Game/Action/choose_action_button.gd" id="1_s5xvc"]
+
+[node name="ChooseActionButton" type="Control"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 100.0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_s5xvc")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuButton" type="MenuButton" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+
+[connection signal="mouse_entered" from="MenuButton" to="." method="_on_menu_button_mouse_entered"]
+[connection signal="mouse_exited" from="MenuButton" to="." method="_on_menu_button_mouse_exited"]

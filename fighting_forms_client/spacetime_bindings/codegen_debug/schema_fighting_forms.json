@@ -1,0 +1,1659 @@
+{
+	"module": "FightingForms",
+	"types": [
+		{
+			"name": "ActionClassConfig",
+			"struct": [
+				{
+					"name": "id",
+					"type": "U16"
+				},
+				{
+					"name": "action_class",
+					"type": "ActionClass",
+					"type_idx": 1
+				},
+				{
+					"name": "name",
+					"type": "String"
+				},
+				{
+					"name": "description",
+					"type": "String"
+				},
+				{
+					"name": "mana_cost",
+					"type": "U8"
+				},
+				{
+					"name": "stamina_cost",
+					"type": "U8"
+				},
+				{
+					"name": "cooldown",
+					"type": "U8"
+				},
+				{
+					"name": "duration",
+					"type": "U8"
+				}
+			],
+			"table_names": [
+				"action_class_config"
+			],
+			"table_name": "action_class_config",
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"is_public": [
+				true
+			]
+		},
+		{
+			"name": "ActionClass",
+			"is_sum_type": false,
+			"enum": [
+				{
+					"name": "Move"
+				},
+				{
+					"name": "Zytex1"
+				},
+				{
+					"name": "Zytex2"
+				},
+				{
+					"name": "Zytex3"
+				},
+				{
+					"name": "Bardass1"
+				},
+				{
+					"name": "Bardass2"
+				},
+				{
+					"name": "Bardass3"
+				},
+				{
+					"name": "Stunlor1"
+				},
+				{
+					"name": "Stunlor2"
+				},
+				{
+					"name": "Stunlor3"
+				}
+			]
+		},
+		{
+			"name": "Character",
+			"struct": [
+				{
+					"name": "id",
+					"type": "U64"
+				},
+				{
+					"name": "game_id",
+					"type": "U64"
+				},
+				{
+					"name": "player_id",
+					"type": "__identity__"
+				},
+				{
+					"name": "position",
+					"type": "Position",
+					"type_idx": 3
+				},
+				{
+					"name": "character_class_id",
+					"type": "U16"
+				},
+				{
+					"name": "hp",
+					"type": "U8"
+				},
+				{
+					"name": "mana",
+					"type": "U8"
+				},
+				{
+					"name": "stamina",
+					"type": "U8"
+				},
+				{
+					"name": "max_hp",
+					"type": "U8"
+				},
+				{
+					"name": "max_mana",
+					"type": "U8"
+				},
+				{
+					"name": "max_stamina",
+					"type": "U8"
+				},
+				{
+					"name": "choosen_actions",
+					"nested_type": [
+						"Array",
+						"Option"
+					],
+					"is_array": true,
+					"is_option_inside_array": true,
+					"type": "Action",
+					"type_idx": 4
+				}
+			],
+			"table_names": [
+				"character"
+			],
+			"table_name": "character",
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"is_public": [
+				true
+			]
+		},
+		{
+			"name": "Position",
+			"struct": [
+				{
+					"name": "x",
+					"type": "U8"
+				},
+				{
+					"name": "y",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "Action",
+			"is_sum_type": true,
+			"enum": [
+				{
+					"name": "Move",
+					"type": "MoveAction"
+				},
+				{
+					"name": "Zytex1",
+					"type": "Zytex1Action"
+				},
+				{
+					"name": "Zytex2",
+					"type": "Zytex2Action"
+				},
+				{
+					"name": "Zytex3",
+					"type": "Zytex3Action"
+				},
+				{
+					"name": "Bardass1",
+					"type": "Bardass1Action"
+				},
+				{
+					"name": "Bardass2",
+					"type": "Bardass2Action"
+				},
+				{
+					"name": "Bardass3",
+					"type": "Bardass3Action"
+				},
+				{
+					"name": "Stunlor1",
+					"type": "Stunlor1Action"
+				},
+				{
+					"name": "Stunlor2",
+					"type": "Stunlor2Action"
+				},
+				{
+					"name": "Stunlor3",
+					"type": "Stunlor3Action"
+				}
+			]
+		},
+		{
+			"name": "MoveAction",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "Direction",
+					"type_idx": 6
+				}
+			]
+		},
+		{
+			"name": "Direction",
+			"is_sum_type": false,
+			"enum": [
+				{
+					"name": "North"
+				},
+				{
+					"name": "NorthEast"
+				},
+				{
+					"name": "East"
+				},
+				{
+					"name": "SouthEast"
+				},
+				{
+					"name": "South"
+				},
+				{
+					"name": "SouthWest"
+				},
+				{
+					"name": "West"
+				},
+				{
+					"name": "NorthWest"
+				}
+			]
+		},
+		{
+			"name": "Zytex1Action",
+			"struct": []
+		},
+		{
+			"name": "Zytex2Action",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "Direction",
+					"type_idx": 6
+				}
+			]
+		},
+		{
+			"name": "Zytex3Action",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "Direction",
+					"type_idx": 6
+				}
+			]
+		},
+		{
+			"name": "Bardass1Action",
+			"struct": []
+		},
+		{
+			"name": "Bardass2Action",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "CardinalDirection",
+					"type_idx": 12
+				}
+			]
+		},
+		{
+			"name": "CardinalDirection",
+			"is_sum_type": false,
+			"enum": [
+				{
+					"name": "North"
+				},
+				{
+					"name": "East"
+				},
+				{
+					"name": "South"
+				},
+				{
+					"name": "West"
+				}
+			]
+		},
+		{
+			"name": "Bardass3Action",
+			"struct": []
+		},
+		{
+			"name": "Stunlor1Action",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "CardinalDirection",
+					"type_idx": 12
+				}
+			]
+		},
+		{
+			"name": "Stunlor2Action",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "CardinalDirection",
+					"type_idx": 12
+				}
+			]
+		},
+		{
+			"name": "Stunlor3Action",
+			"struct": [
+				{
+					"name": "direction",
+					"type": "CardinalDirection",
+					"type_idx": 12
+				}
+			]
+		},
+		{
+			"name": "CharacterClass",
+			"struct": [
+				{
+					"name": "id",
+					"type": "U16"
+				},
+				{
+					"name": "name",
+					"type": "String"
+				},
+				{
+					"name": "description",
+					"type": "String"
+				},
+				{
+					"name": "hp",
+					"type": "U8"
+				},
+				{
+					"name": "mana",
+					"type": "U8"
+				},
+				{
+					"name": "stamina",
+					"type": "U8"
+				},
+				{
+					"name": "actions_class",
+					"nested_type": [
+						"Array"
+					],
+					"is_array": true,
+					"type": "ActionClass",
+					"type_idx": 1
+				}
+			],
+			"table_names": [
+				"character_class"
+			],
+			"table_name": "character_class",
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"is_public": [
+				true
+			]
+		},
+		{
+			"name": "Game",
+			"struct": [
+				{
+					"name": "id",
+					"type": "U64"
+				},
+				{
+					"name": "players",
+					"nested_type": [
+						"Array"
+					],
+					"is_array": true,
+					"type": "__identity__"
+				},
+				{
+					"name": "started",
+					"type": "Bool"
+				},
+				{
+					"name": "round",
+					"type": "U8"
+				},
+				{
+					"name": "ending",
+					"type": "Bool"
+				}
+			],
+			"table_names": [
+				"game"
+			],
+			"table_name": "game",
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"is_public": [
+				true
+			]
+		},
+		{
+			"name": "Player",
+			"struct": [
+				{
+					"name": "id",
+					"type": "__identity__"
+				},
+				{
+					"name": "name",
+					"type": "String"
+				},
+				{
+					"name": "character_class_id",
+					"nested_type": [
+						"Option"
+					],
+					"is_option": true,
+					"type": "U16"
+				},
+				{
+					"name": "character_id",
+					"nested_type": [
+						"Option"
+					],
+					"is_option": true,
+					"type": "U64"
+				},
+				{
+					"name": "connected",
+					"type": "Bool"
+				},
+				{
+					"name": "game_id",
+					"nested_type": [
+						"Option"
+					],
+					"is_option": true,
+					"type": "U64"
+				},
+				{
+					"name": "ready",
+					"type": "Bool"
+				},
+				{
+					"name": "eliminated",
+					"type": "Bool"
+				}
+			],
+			"table_names": [
+				"player"
+			],
+			"table_name": "player",
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"is_public": [
+				true
+			]
+		}
+	],
+	"reducers": [
+		{
+			"name": "choose_action",
+			"params": [
+				{
+					"name": "action",
+					"nested_type": [
+						"Option"
+					],
+					"is_option": true,
+					"type": "Action",
+					"type_idx": 4
+				},
+				{
+					"name": "step",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "create_game",
+			"params": []
+		},
+		{
+			"name": "ready",
+			"params": [
+				{
+					"name": "is_ready",
+					"type": "Bool"
+				}
+			]
+		},
+		{
+			"name": "select_character_class",
+			"params": [
+				{
+					"name": "character_class_id",
+					"type": "U16"
+				}
+			]
+		},
+		{
+			"name": "select_game",
+			"params": [
+				{
+					"name": "game_id",
+					"type": "U64"
+				}
+			]
+		},
+		{
+			"name": "set_name",
+			"params": [
+				{
+					"name": "name",
+					"type": "String"
+				}
+			]
+		}
+	],
+	"tables": [
+		{
+			"name": "action_class_config",
+			"type_idx": 0,
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"unique_indexes": [
+				{
+					"name": "action_class",
+					"type": "ActionClass",
+					"type_idx": 1,
+					"constraint_name": "action_class_config_action_class_key"
+				},
+				{
+					"name": "id",
+					"type": "U16",
+					"constraint_name": "action_class_config_id_key"
+				}
+			],
+			"is_public": true
+		},
+		{
+			"name": "character",
+			"type_idx": 2,
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"unique_indexes": [
+				{
+					"name": "id",
+					"type": "U64",
+					"constraint_name": "character_id_key"
+				}
+			],
+			"is_public": true
+		},
+		{
+			"name": "character_class",
+			"type_idx": 17,
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"unique_indexes": [
+				{
+					"name": "id",
+					"type": "U16",
+					"constraint_name": "character_class_id_key"
+				}
+			],
+			"is_public": true
+		},
+		{
+			"name": "game",
+			"type_idx": 18,
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"unique_indexes": [
+				{
+					"name": "id",
+					"type": "U64",
+					"constraint_name": "game_id_key"
+				}
+			],
+			"is_public": true
+		},
+		{
+			"name": "player",
+			"type_idx": 19,
+			"primary_key": 0,
+			"primary_key_name": "id",
+			"unique_indexes": [
+				{
+					"name": "id",
+					"type": "__identity__",
+					"constraint_name": "player_id_key"
+				}
+			],
+			"is_public": true
+		}
+	],
+	"type_map": {
+		"__identity__": "PackedByteArray",
+		"__connection_id__": "PackedByteArray",
+		"__timestamp_micros_since_unix_epoch__": "int",
+		"__time_duration_micros__": "int",
+		"U128": "PackedByteArray",
+		"I8": "int",
+		"I16": "int",
+		"I32": "int",
+		"I64": "int",
+		"U8": "int",
+		"U16": "int",
+		"U32": "int",
+		"U64": "int",
+		"F32": "float",
+		"F64": "float",
+		"String": "String",
+		"Bool": "bool",
+		"Nil": "null",
+		"Vector4": "Vector4",
+		"Vector4I": "Vector4i",
+		"Vector3": "Vector3",
+		"Vector3I": "Vector3i",
+		"Vector2": "Vector2",
+		"Vector2I": "Vector2i",
+		"Quaternion": "Quaternion",
+		"Color": "Color",
+		"Plane": "Plane",
+		"ActionClassConfig": "FightingFormsActionClassConfig",
+		"ActionClass": "FightingFormsModuleClient.Types.ActionClass",
+		"Character": "FightingFormsCharacter",
+		"Position": "FightingFormsPosition",
+		"Action": "FightingFormsAction",
+		"MoveAction": "FightingFormsMoveAction",
+		"Direction": "FightingFormsModuleClient.Types.Direction",
+		"Zytex1Action": "FightingFormsZytex1Action",
+		"Zytex2Action": "FightingFormsZytex2Action",
+		"Zytex3Action": "FightingFormsZytex3Action",
+		"Bardass1Action": "FightingFormsBardass1Action",
+		"Bardass2Action": "FightingFormsBardass2Action",
+		"CardinalDirection": "FightingFormsModuleClient.Types.CardinalDirection",
+		"Bardass3Action": "FightingFormsBardass3Action",
+		"Stunlor1Action": "FightingFormsStunlor1Action",
+		"Stunlor2Action": "FightingFormsStunlor2Action",
+		"Stunlor3Action": "FightingFormsStunlor3Action",
+		"CharacterClass": "FightingFormsCharacterClass",
+		"Game": "FightingFormsGame",
+		"Player": "FightingFormsPlayer"
+	},
+	"meta_type_map": {
+		"I8": "i8",
+		"I16": "i16",
+		"I32": "i32",
+		"I64": "i64",
+		"U8": "u8",
+		"U16": "u16",
+		"U32": "u32",
+		"U64": "u64",
+		"U128": "u128",
+		"F32": "f32",
+		"F64": "f64",
+		"String": "string",
+		"Bool": "bool",
+		"Nil": "nil",
+		"Vector4": "vector4",
+		"Vector4I": "vector4i",
+		"Vector3": "vector3",
+		"Vector3I": "vector3i",
+		"Vector2": "vector2",
+		"Vector2I": "vector2i",
+		"Quaternion": "quaternion",
+		"Color": "color",
+		"__identity__": "identity",
+		"__connection_id__": "connection_id",
+		"__timestamp_micros_since_unix_epoch__": "i64",
+		"__time_duration_micros__": "i64",
+		"ActionClassConfig": "FightingFormsActionClassConfig",
+		"ActionClass": "u8",
+		"Character": "FightingFormsCharacter",
+		"Position": "FightingFormsPosition",
+		"Action": "FightingFormsAction",
+		"MoveAction": "FightingFormsMoveAction",
+		"Direction": "u8",
+		"Zytex1Action": "FightingFormsZytex1Action",
+		"Zytex2Action": "FightingFormsZytex2Action",
+		"Zytex3Action": "FightingFormsZytex3Action",
+		"Bardass1Action": "FightingFormsBardass1Action",
+		"Bardass2Action": "FightingFormsBardass2Action",
+		"CardinalDirection": "u8",
+		"Bardass3Action": "FightingFormsBardass3Action",
+		"Stunlor1Action": "FightingFormsStunlor1Action",
+		"Stunlor2Action": "FightingFormsStunlor2Action",
+		"Stunlor3Action": "FightingFormsStunlor3Action",
+		"CharacterClass": "FightingFormsCharacterClass",
+		"Game": "FightingFormsGame",
+		"Player": "FightingFormsPlayer"
+	},
+	"typespace": [
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "id"
+						},
+						"algebraic_type": {
+							"U16": []
+						}
+					},
+					{
+						"name": {
+							"some": "action_class"
+						},
+						"algebraic_type": {
+							"Ref": 1.0
+						}
+					},
+					{
+						"name": {
+							"some": "name"
+						},
+						"algebraic_type": {
+							"String": []
+						}
+					},
+					{
+						"name": {
+							"some": "description"
+						},
+						"algebraic_type": {
+							"String": []
+						}
+					},
+					{
+						"name": {
+							"some": "mana_cost"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "stamina_cost"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "cooldown"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "duration"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "Move"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Zytex1"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Zytex2"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Zytex3"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Bardass1"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Bardass2"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Bardass3"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Stunlor1"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Stunlor2"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Stunlor3"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "game_id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "player_id"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": [
+									{
+										"name": {
+											"some": "__identity__"
+										},
+										"algebraic_type": {
+											"U256": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "position"
+						},
+						"algebraic_type": {
+							"Ref": 3.0
+						}
+					},
+					{
+						"name": {
+							"some": "character_class_id"
+						},
+						"algebraic_type": {
+							"U16": []
+						}
+					},
+					{
+						"name": {
+							"some": "hp"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "mana"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "stamina"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "max_hp"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "max_mana"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "max_stamina"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "choosen_actions"
+						},
+						"algebraic_type": {
+							"Array": {
+								"Sum": {
+									"variants": [
+										{
+											"name": {
+												"some": "some"
+											},
+											"algebraic_type": {
+												"Ref": 4.0
+											}
+										},
+										{
+											"name": {
+												"some": "none"
+											},
+											"algebraic_type": {
+												"Product": {
+													"elements": []
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "x"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "y"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "Move"
+						},
+						"algebraic_type": {
+							"Ref": 5.0
+						}
+					},
+					{
+						"name": {
+							"some": "Zytex1"
+						},
+						"algebraic_type": {
+							"Ref": 7.0
+						}
+					},
+					{
+						"name": {
+							"some": "Zytex2"
+						},
+						"algebraic_type": {
+							"Ref": 8.0
+						}
+					},
+					{
+						"name": {
+							"some": "Zytex3"
+						},
+						"algebraic_type": {
+							"Ref": 9.0
+						}
+					},
+					{
+						"name": {
+							"some": "Bardass1"
+						},
+						"algebraic_type": {
+							"Ref": 10.0
+						}
+					},
+					{
+						"name": {
+							"some": "Bardass2"
+						},
+						"algebraic_type": {
+							"Ref": 11.0
+						}
+					},
+					{
+						"name": {
+							"some": "Bardass3"
+						},
+						"algebraic_type": {
+							"Ref": 13.0
+						}
+					},
+					{
+						"name": {
+							"some": "Stunlor1"
+						},
+						"algebraic_type": {
+							"Ref": 14.0
+						}
+					},
+					{
+						"name": {
+							"some": "Stunlor2"
+						},
+						"algebraic_type": {
+							"Ref": 15.0
+						}
+					},
+					{
+						"name": {
+							"some": "Stunlor3"
+						},
+						"algebraic_type": {
+							"Ref": 16.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 6.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "North"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "NorthEast"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "East"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "SouthEast"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "South"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "SouthWest"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "West"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "NorthWest"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": []
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 6.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 6.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": []
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 12.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "North"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "East"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "South"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "West"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": []
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 12.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 12.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 12.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "id"
+						},
+						"algebraic_type": {
+							"U16": []
+						}
+					},
+					{
+						"name": {
+							"some": "name"
+						},
+						"algebraic_type": {
+							"String": []
+						}
+					},
+					{
+						"name": {
+							"some": "description"
+						},
+						"algebraic_type": {
+							"String": []
+						}
+					},
+					{
+						"name": {
+							"some": "hp"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "mana"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "stamina"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "actions_class"
+						},
+						"algebraic_type": {
+							"Array": {
+								"Ref": 1.0
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "players"
+						},
+						"algebraic_type": {
+							"Array": {
+								"Product": {
+									"elements": [
+										{
+											"name": {
+												"some": "__identity__"
+											},
+											"algebraic_type": {
+												"U256": []
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "started"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					},
+					{
+						"name": {
+							"some": "round"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "ending"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "id"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": [
+									{
+										"name": {
+											"some": "__identity__"
+										},
+										"algebraic_type": {
+											"U256": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "name"
+						},
+						"algebraic_type": {
+							"String": []
+						}
+					},
+					{
+						"name": {
+							"some": "character_class_id"
+						},
+						"algebraic_type": {
+							"Sum": {
+								"variants": [
+									{
+										"name": {
+											"some": "some"
+										},
+										"algebraic_type": {
+											"U16": []
+										}
+									},
+									{
+										"name": {
+											"some": "none"
+										},
+										"algebraic_type": {
+											"Product": {
+												"elements": []
+											}
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "character_id"
+						},
+						"algebraic_type": {
+							"Sum": {
+								"variants": [
+									{
+										"name": {
+											"some": "some"
+										},
+										"algebraic_type": {
+											"U64": []
+										}
+									},
+									{
+										"name": {
+											"some": "none"
+										},
+										"algebraic_type": {
+											"Product": {
+												"elements": []
+											}
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "connected"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					},
+					{
+						"name": {
+							"some": "game_id"
+						},
+						"algebraic_type": {
+							"Sum": {
+								"variants": [
+									{
+										"name": {
+											"some": "some"
+										},
+										"algebraic_type": {
+											"U64": []
+										}
+									},
+									{
+										"name": {
+											"some": "none"
+										},
+										"algebraic_type": {
+											"Product": {
+												"elements": []
+											}
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "ready"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					},
+					{
+						"name": {
+							"some": "eliminated"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					}
+				]
+			}
+		}
+	]
+}

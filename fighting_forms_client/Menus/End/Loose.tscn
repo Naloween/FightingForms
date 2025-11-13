@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8t0s6da8m0qe"]
+
+[ext_resource type="Script" uid="uid://cwc1e0kodqxyn" path="res://Menus/End/restart.gd" id="1_n01fg"]
+[ext_resource type="FontFile" uid="uid://c26me426vt05k" path="res://assets/fonts/vector_waves/Vector Waves.otf" id="2_a5fkq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pibp8"]
+font = ExtResource("2_a5fkq")
+font_size = 64
+
+[node name="Loose" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n01fg")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "You lost !"
+label_settings = SubResource("LabelSettings_pibp8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GoTitle" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -90.0
+offset_top = -89.0
+offset_right = 91.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Go back to title screen"
+
+[connection signal="pressed" from="Panel/GoTitle" to="." method="_on_go_title_pressed"]

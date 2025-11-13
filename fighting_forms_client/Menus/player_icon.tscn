@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3 uid="uid://ckky4ic57lotc"]
+
+[ext_resource type="Script" uid="uid://d8nu2pysluaq" path="res://Menus/player_icon.gd" id="1_mh5xa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scbib"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 80
+corner_radius_top_right = 80
+corner_radius_bottom_right = 80
+corner_radius_bottom_left = 80
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mh5xa"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 80
+corner_radius_top_right = 80
+corner_radius_bottom_right = 80
+corner_radius_bottom_left = 80
+
+[sub_resource type="Gradient" id="Gradient_coilf"]
+colors = PackedColorArray(0.9428666, 0.30396608, 0.7325438, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c3bh0"]
+gradient = SubResource("Gradient_coilf")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_to723"]
+bg_color = Color(0.38346866, 0.66828805, 0.30626154, 1)
+corner_radius_top_left = 80
+corner_radius_top_right = 80
+corner_radius_bottom_right = 80
+corner_radius_bottom_left = 80
+
+[node name="PlayerIcon" type="Control"]
+custom_minimum_size = Vector2(125, 120)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 124.0
+offset_bottom = 117.0
+script = ExtResource("1_mh5xa")
+
+[node name="Border" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_scbib")
+
+[node name="Panel" type="PanelContainer" parent="."]
+clip_children = 2
+clip_contents = true
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mh5xa")
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_c3bh0")
+
+[node name="Connected" type="Panel" parent="."]
+layout_mode = 1
+offset_left = 81.0
+offset_top = 75.0
+offset_right = 96.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_to723")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 95.0
+offset_right = 103.0
+offset_bottom = 118.0
+text = "Player Name"
+
+[node name="Ready" type="Label" parent="."]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 96.0
+offset_right = 123.0
+offset_bottom = 119.0
+theme_override_colors/font_color = Color(0.624121, 0.16621858, 0.14492482, 1)
+text = "❌"
+horizontal_alignment = 2

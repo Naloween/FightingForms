@@ -1,0 +1,140 @@
+[gd_scene load_steps=12 format=3 uid="uid://bm45edubvrywx"]
+
+[ext_resource type="Script" uid="uid://cgvtqmuki1dvb" path="res://Menus/Game/game.gd" id="1_cqkkh"]
+[ext_resource type="FontFile" uid="uid://c26me426vt05k" path="res://assets/fonts/vector_waves/Vector Waves.otf" id="2_3clua"]
+[ext_resource type="PackedScene" uid="uid://dl43n6kxv7pkw" path="res://Menus/Game/board.tscn" id="3_ne7kq"]
+[ext_resource type="PackedScene" uid="uid://b4pjp03xcqpk4" path="res://Characters/Bar/Bar.tscn" id="4_3clua"]
+[ext_resource type="Theme" uid="uid://dfs3negd4od71" path="res://assets/main_theme.tres" id="4_ne7kq"]
+[ext_resource type="PackedScene" uid="uid://dibifrkjnkqhi" path="res://Menus/Game/Action/choose_direction.tscn" id="6_rbg28"]
+[ext_resource type="PackedScene" uid="uid://hjrp2hiddsfs" path="res://Menus/Game/Action/choose_cardinal_direction.tscn" id="7_xjjgi"]
+
+[sub_resource type="Theme" id="Theme_ouwbm"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_i6cgr"]
+font = ExtResource("2_3clua")
+font_size = 64
+font_color = Color(0.2789754, 0.79133856, 0.8962093, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ne7kq"]
+bg_color = Color(0.06610201, 0.32778338, 0.3788537, 1)
+border_width_left = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_cqkkh"]
+font_size = 32
+
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_cqkkh")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_ouwbm")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Board" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/Board"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Game"
+label_settings = SubResource("LabelSettings_i6cgr")
+horizontal_alignment = 1
+
+[node name="Board" parent="HBoxContainer/Board" instance=ExtResource("3_ne7kq")]
+layout_mode = 2
+
+[node name="SideMenu" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ne7kq")
+
+[node name="SideMenuContainer" type="VBoxContainer" parent="HBoxContainer/SideMenu"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -68.0
+offset_right = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Players"
+
+[node name="players" type="HBoxContainer" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Round" type="Label" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+text = "Round: 1"
+label_settings = SubResource("LabelSettings_cqkkh")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReadyButton" type="Button" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("4_ne7kq")
+text = "Ready"
+
+[node name="HP_Bar" parent="HBoxContainer/SideMenu/SideMenuContainer" instance=ExtResource("4_3clua")]
+layout_mode = 2
+
+[node name="Mana_Bar" parent="HBoxContainer/SideMenu/SideMenuContainer" instance=ExtResource("4_3clua")]
+layout_mode = 2
+type = 1
+
+[node name="Stamina_Bar" parent="HBoxContainer/SideMenu/SideMenuContainer" instance=ExtResource("4_3clua")]
+layout_mode = 2
+type = 2
+
+[node name="ChooseActions" type="HBoxContainer" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+
+[node name="ChooseDirection" parent="." instance=ExtResource("6_rbg28")]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="ChooseCardinalDirection" parent="." instance=ExtResource("7_xjjgi")]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[connection signal="pressed" from="HBoxContainer/SideMenu/SideMenuContainer/ReadyButton" to="." method="_on_button_pressed"]

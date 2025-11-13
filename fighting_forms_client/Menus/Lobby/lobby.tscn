@@ -1,0 +1,109 @@
+[gd_scene load_steps=8 format=3 uid="uid://8wp4i0qt4twy"]
+
+[ext_resource type="Script" uid="uid://ssm6tdbr3fr5" path="res://Menus/Lobby/lobby.gd" id="1_hxxlo"]
+[ext_resource type="FontFile" uid="uid://c26me426vt05k" path="res://assets/fonts/vector_waves/Vector Waves.otf" id="1_s3bcv"]
+[ext_resource type="PackedScene" uid="uid://cot2aw5vvlsn0" path="res://Characters/Bardass/bardass_select.tscn" id="3_2fr1y"]
+[ext_resource type="PackedScene" uid="uid://c0t67r3m5inmk" path="res://Characters/Stunlor/stunlor_select.tscn" id="4_7hylv"]
+[ext_resource type="PackedScene" uid="uid://dxd4a2882o03j" path="res://Characters/Zytex/zytex_select.tscn" id="5_xx811"]
+
+[sub_resource type="Theme" id="Theme_ouwbm"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_i6cgr"]
+font = ExtResource("1_s3bcv")
+font_size = 64
+font_color = Color(0.2789754, 0.79133856, 0.8962093, 1)
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_hxxlo")
+game_id = null
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_ouwbm")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -218.0
+offset_top = -287.0
+offset_right = 217.0
+offset_bottom = -227.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Lobby"
+label_settings = SubResource("LabelSettings_i6cgr")
+horizontal_alignment = 1
+
+[node name="Players" type="HBoxContainer" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -120.0
+offset_right = 25.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CharactersClass" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -470.0
+offset_top = 56.0
+offset_right = 471.0
+offset_bottom = 170.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Bardass" parent="CharactersClass" instance=ExtResource("3_2fr1y")]
+layout_mode = 2
+
+[node name="Stunlor" parent="CharactersClass" instance=ExtResource("4_7hylv")]
+layout_mode = 2
+
+[node name="Zytex" parent="CharactersClass" instance=ExtResource("5_xx811")]
+layout_mode = 2
+
+[node name="ReadyButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -102.0
+offset_right = 79.5
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 32
+text = "Ready"
+
+[connection signal="pressed" from="ReadyButton" to="." method="_on_ready_button_pressed"]
