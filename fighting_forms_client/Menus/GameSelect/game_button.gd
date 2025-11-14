@@ -24,13 +24,11 @@ func _ready() -> void:
 	text = creator_name+"'s Game\n " + str(len(game.players)) + "/" + str(game.max_nb_players)
 
 func _on_pressed() -> void:
-	print("pressed")
 	enter_game.emit(game_id)
 
 func _on_game_update(old_game: FightingFormsGame, new_game: FightingFormsGame):
 	text = creator_name+"'s Game\n " + str(len(new_game.players)) + "/" + str(new_game.max_nb_players)
 
 func _exit_tree() -> void:
-	print("eXIT TREE")
 	
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)

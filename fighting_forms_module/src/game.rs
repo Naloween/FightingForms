@@ -238,7 +238,7 @@ pub fn quit_game(ctx: &ReducerContext) {
         .filter(|&player_id| player_id != player.id)
         .collect();
 
-    if new_players.len() <= 1 {
+    if new_players.len() == 0 || (game.started && new_players.len() == 1) {
         end_game(ctx, &game);
     } else {
         // Update game

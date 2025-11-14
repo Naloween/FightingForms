@@ -30,8 +30,8 @@ func _ready():
 	# Disable threading (e.g., for web builds)
 	# options.threading = false
 	SpacetimeDB.FightingForms.connect_db(
-		#"http://88.170.179.219:50002", # Base HTTP URL
-		"http://localhost:3000", # Base HTTP URL
+		"http://88.170.179.219:50002", # Base HTTP URL
+		#"http://localhost:3000", # Base HTTP URL
 		"fighting-forms",             # Module Name
 		options
 	)

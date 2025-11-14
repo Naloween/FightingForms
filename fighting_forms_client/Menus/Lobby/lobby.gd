@@ -29,7 +29,7 @@ func _ready():
 
 func remove_players():
 	for node in $Players.get_children():
-		$Players.remove_child(node)
+		node.queue_free()
 
 func add_players(game: FightingFormsGame):
 	for player_id in game.players:
