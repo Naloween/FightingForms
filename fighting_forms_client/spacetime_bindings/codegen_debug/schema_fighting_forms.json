@@ -100,37 +100,8 @@
 					"type": "__identity__"
 				},
 				{
-					"name": "position",
-					"type": "Position",
-					"type_idx": 3
-				},
-				{
 					"name": "character_class_id",
 					"type": "U16"
-				},
-				{
-					"name": "hp",
-					"type": "U8"
-				},
-				{
-					"name": "mana",
-					"type": "U8"
-				},
-				{
-					"name": "stamina",
-					"type": "U8"
-				},
-				{
-					"name": "max_hp",
-					"type": "U8"
-				},
-				{
-					"name": "max_mana",
-					"type": "U8"
-				},
-				{
-					"name": "max_stamina",
-					"type": "U8"
 				},
 				{
 					"name": "choosen_actions",
@@ -141,7 +112,21 @@
 					"is_array": true,
 					"is_option_inside_array": true,
 					"type": "Action",
-					"type_idx": 4
+					"type_idx": 3
+				},
+				{
+					"name": "current_state",
+					"type": "CharacterState",
+					"type_idx": 16
+				},
+				{
+					"name": "states",
+					"nested_type": [
+						"Array"
+					],
+					"is_array": true,
+					"type": "CharacterState",
+					"type_idx": 16
 				}
 			],
 			"table_names": [
@@ -152,19 +137,6 @@
 			"primary_key_name": "id",
 			"is_public": [
 				true
-			]
-		},
-		{
-			"name": "Position",
-			"struct": [
-				{
-					"name": "x",
-					"type": "U8"
-				},
-				{
-					"name": "y",
-					"type": "U8"
-				}
 			]
 		},
 		{
@@ -219,7 +191,7 @@
 				{
 					"name": "direction",
 					"type": "Direction",
-					"type_idx": 6
+					"type_idx": 5
 				}
 			]
 		},
@@ -263,7 +235,7 @@
 				{
 					"name": "direction",
 					"type": "Direction",
-					"type_idx": 6
+					"type_idx": 5
 				}
 			]
 		},
@@ -273,7 +245,7 @@
 				{
 					"name": "direction",
 					"type": "Direction",
-					"type_idx": 6
+					"type_idx": 5
 				}
 			]
 		},
@@ -287,7 +259,7 @@
 				{
 					"name": "direction",
 					"type": "CardinalDirection",
-					"type_idx": 12
+					"type_idx": 11
 				}
 			]
 		},
@@ -319,7 +291,7 @@
 				{
 					"name": "direction",
 					"type": "CardinalDirection",
-					"type_idx": 12
+					"type_idx": 11
 				}
 			]
 		},
@@ -329,7 +301,7 @@
 				{
 					"name": "direction",
 					"type": "CardinalDirection",
-					"type_idx": 12
+					"type_idx": 11
 				}
 			]
 		},
@@ -339,7 +311,54 @@
 				{
 					"name": "direction",
 					"type": "CardinalDirection",
-					"type_idx": 12
+					"type_idx": 11
+				}
+			]
+		},
+		{
+			"name": "CharacterState",
+			"struct": [
+				{
+					"name": "position",
+					"type": "Position",
+					"type_idx": 17
+				},
+				{
+					"name": "hp",
+					"type": "U8"
+				},
+				{
+					"name": "mana",
+					"type": "U8"
+				},
+				{
+					"name": "stamina",
+					"type": "U8"
+				},
+				{
+					"name": "max_hp",
+					"type": "U8"
+				},
+				{
+					"name": "max_mana",
+					"type": "U8"
+				},
+				{
+					"name": "max_stamina",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "Position",
+			"struct": [
+				{
+					"name": "x",
+					"type": "U8"
+				},
+				{
+					"name": "y",
+					"type": "U8"
 				}
 			]
 		},
@@ -416,6 +435,14 @@
 				{
 					"name": "ending",
 					"type": "Bool"
+				},
+				{
+					"name": "creator_id",
+					"type": "__identity__"
+				},
+				{
+					"name": "max_nb_players",
+					"type": "U8"
 				}
 			],
 			"table_names": [
@@ -498,7 +525,7 @@
 					],
 					"is_option": true,
 					"type": "Action",
-					"type_idx": 4
+					"type_idx": 3
 				},
 				{
 					"name": "step",
@@ -584,7 +611,7 @@
 		},
 		{
 			"name": "character_class",
-			"type_idx": 17,
+			"type_idx": 18,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -598,7 +625,7 @@
 		},
 		{
 			"name": "game",
-			"type_idx": 18,
+			"type_idx": 19,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -612,7 +639,7 @@
 		},
 		{
 			"name": "player",
-			"type_idx": 19,
+			"type_idx": 20,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -656,7 +683,6 @@
 		"ActionClassConfig": "FightingFormsActionClassConfig",
 		"ActionClass": "FightingFormsModuleClient.Types.ActionClass",
 		"Character": "FightingFormsCharacter",
-		"Position": "FightingFormsPosition",
 		"Action": "FightingFormsAction",
 		"MoveAction": "FightingFormsMoveAction",
 		"Direction": "FightingFormsModuleClient.Types.Direction",
@@ -670,6 +696,8 @@
 		"Stunlor1Action": "FightingFormsStunlor1Action",
 		"Stunlor2Action": "FightingFormsStunlor2Action",
 		"Stunlor3Action": "FightingFormsStunlor3Action",
+		"CharacterState": "FightingFormsCharacterState",
+		"Position": "FightingFormsPosition",
 		"CharacterClass": "FightingFormsCharacterClass",
 		"Game": "FightingFormsGame",
 		"Player": "FightingFormsPlayer"
@@ -704,7 +732,6 @@
 		"ActionClassConfig": "FightingFormsActionClassConfig",
 		"ActionClass": "u8",
 		"Character": "FightingFormsCharacter",
-		"Position": "FightingFormsPosition",
 		"Action": "FightingFormsAction",
 		"MoveAction": "FightingFormsMoveAction",
 		"Direction": "u8",
@@ -718,6 +745,8 @@
 		"Stunlor1Action": "FightingFormsStunlor1Action",
 		"Stunlor2Action": "FightingFormsStunlor2Action",
 		"Stunlor3Action": "FightingFormsStunlor3Action",
+		"CharacterState": "FightingFormsCharacterState",
+		"Position": "FightingFormsPosition",
 		"CharacterClass": "FightingFormsCharacterClass",
 		"Game": "FightingFormsGame",
 		"Player": "FightingFormsPlayer"
@@ -939,66 +968,10 @@
 					},
 					{
 						"name": {
-							"some": "position"
-						},
-						"algebraic_type": {
-							"Ref": 3.0
-						}
-					},
-					{
-						"name": {
 							"some": "character_class_id"
 						},
 						"algebraic_type": {
 							"U16": []
-						}
-					},
-					{
-						"name": {
-							"some": "hp"
-						},
-						"algebraic_type": {
-							"U8": []
-						}
-					},
-					{
-						"name": {
-							"some": "mana"
-						},
-						"algebraic_type": {
-							"U8": []
-						}
-					},
-					{
-						"name": {
-							"some": "stamina"
-						},
-						"algebraic_type": {
-							"U8": []
-						}
-					},
-					{
-						"name": {
-							"some": "max_hp"
-						},
-						"algebraic_type": {
-							"U8": []
-						}
-					},
-					{
-						"name": {
-							"some": "max_mana"
-						},
-						"algebraic_type": {
-							"U8": []
-						}
-					},
-					{
-						"name": {
-							"some": "max_stamina"
-						},
-						"algebraic_type": {
-							"U8": []
 						}
 					},
 					{
@@ -1014,7 +987,7 @@
 												"some": "some"
 											},
 											"algebraic_type": {
-												"Ref": 4.0
+												"Ref": 3.0
 											}
 										},
 										{
@@ -1031,27 +1004,23 @@
 								}
 							}
 						}
-					}
-				]
-			}
-		},
-		{
-			"Product": {
-				"elements": [
+					},
 					{
 						"name": {
-							"some": "x"
+							"some": "current_state"
 						},
 						"algebraic_type": {
-							"U8": []
+							"Ref": 16.0
 						}
 					},
 					{
 						"name": {
-							"some": "y"
+							"some": "states"
 						},
 						"algebraic_type": {
-							"U8": []
+							"Array": {
+								"Ref": 16.0
+							}
 						}
 					}
 				]
@@ -1065,7 +1034,7 @@
 							"some": "Move"
 						},
 						"algebraic_type": {
-							"Ref": 5.0
+							"Ref": 4.0
 						}
 					},
 					{
@@ -1073,7 +1042,7 @@
 							"some": "Zytex1"
 						},
 						"algebraic_type": {
-							"Ref": 7.0
+							"Ref": 6.0
 						}
 					},
 					{
@@ -1081,7 +1050,7 @@
 							"some": "Zytex2"
 						},
 						"algebraic_type": {
-							"Ref": 8.0
+							"Ref": 7.0
 						}
 					},
 					{
@@ -1089,7 +1058,7 @@
 							"some": "Zytex3"
 						},
 						"algebraic_type": {
-							"Ref": 9.0
+							"Ref": 8.0
 						}
 					},
 					{
@@ -1097,7 +1066,7 @@
 							"some": "Bardass1"
 						},
 						"algebraic_type": {
-							"Ref": 10.0
+							"Ref": 9.0
 						}
 					},
 					{
@@ -1105,7 +1074,7 @@
 							"some": "Bardass2"
 						},
 						"algebraic_type": {
-							"Ref": 11.0
+							"Ref": 10.0
 						}
 					},
 					{
@@ -1113,7 +1082,7 @@
 							"some": "Bardass3"
 						},
 						"algebraic_type": {
-							"Ref": 13.0
+							"Ref": 12.0
 						}
 					},
 					{
@@ -1121,7 +1090,7 @@
 							"some": "Stunlor1"
 						},
 						"algebraic_type": {
-							"Ref": 14.0
+							"Ref": 13.0
 						}
 					},
 					{
@@ -1129,7 +1098,7 @@
 							"some": "Stunlor2"
 						},
 						"algebraic_type": {
-							"Ref": 15.0
+							"Ref": 14.0
 						}
 					},
 					{
@@ -1137,7 +1106,7 @@
 							"some": "Stunlor3"
 						},
 						"algebraic_type": {
-							"Ref": 16.0
+							"Ref": 15.0
 						}
 					}
 				]
@@ -1151,7 +1120,7 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 6.0
+							"Ref": 5.0
 						}
 					}
 				]
@@ -1256,7 +1225,7 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 6.0
+							"Ref": 5.0
 						}
 					}
 				]
@@ -1270,7 +1239,7 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 6.0
+							"Ref": 5.0
 						}
 					}
 				]
@@ -1289,7 +1258,7 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 12.0
+							"Ref": 11.0
 						}
 					}
 				]
@@ -1354,7 +1323,7 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 12.0
+							"Ref": 11.0
 						}
 					}
 				]
@@ -1368,7 +1337,7 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 12.0
+							"Ref": 11.0
 						}
 					}
 				]
@@ -1382,7 +1351,91 @@
 							"some": "direction"
 						},
 						"algebraic_type": {
-							"Ref": 12.0
+							"Ref": 11.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "position"
+						},
+						"algebraic_type": {
+							"Ref": 17.0
+						}
+					},
+					{
+						"name": {
+							"some": "hp"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "mana"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "stamina"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "max_hp"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "max_mana"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "max_stamina"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "x"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "y"
+						},
+						"algebraic_type": {
+							"U8": []
 						}
 					}
 				]
@@ -1506,6 +1559,33 @@
 						},
 						"algebraic_type": {
 							"Bool": []
+						}
+					},
+					{
+						"name": {
+							"some": "creator_id"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": [
+									{
+										"name": {
+											"some": "__identity__"
+										},
+										"algebraic_type": {
+											"U256": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "max_nb_players"
+						},
+						"algebraic_type": {
+							"U8": []
 						}
 					}
 				]

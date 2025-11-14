@@ -15,7 +15,6 @@ enum ActionClass {
 	Stunlor3
 }
 const Character = preload('res://spacetime_bindings/schema/types/fighting_forms_character.gd')
-const Position = preload('res://spacetime_bindings/schema/types/fighting_forms_position.gd')
 const Action = preload('res://spacetime_bindings/schema/types/fighting_forms_action.gd')
 const MoveAction = preload('res://spacetime_bindings/schema/types/fighting_forms_move_action.gd')
 enum Direction {
@@ -43,6 +42,8 @@ const Bardass3Action = preload('res://spacetime_bindings/schema/types/fighting_f
 const Stunlor1Action = preload('res://spacetime_bindings/schema/types/fighting_forms_stunlor_1_action.gd')
 const Stunlor2Action = preload('res://spacetime_bindings/schema/types/fighting_forms_stunlor_2_action.gd')
 const Stunlor3Action = preload('res://spacetime_bindings/schema/types/fighting_forms_stunlor_3_action.gd')
+const CharacterState = preload('res://spacetime_bindings/schema/types/fighting_forms_character_state.gd')
+const Position = preload('res://spacetime_bindings/schema/types/fighting_forms_position.gd')
 const CharacterClass = preload('res://spacetime_bindings/schema/types/fighting_forms_character_class.gd')
 const Game = preload('res://spacetime_bindings/schema/types/fighting_forms_game.gd')
 const Player = preload('res://spacetime_bindings/schema/types/fighting_forms_player.gd')

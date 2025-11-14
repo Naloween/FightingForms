@@ -1,7 +1,9 @@
 extends Control
+class_name Game
 
 signal win
 signal loose
+signal new_step(step: int)
 
 @export var game_id: int = 0
 
@@ -11,8 +13,9 @@ var CHOOSE_ACTION_BUTTON_SCENE = preload("res://Menus/Game/Action/ChooseActionBu
 
 var characters = Dictionary() # Store each character node for each character id
 var is_ready = false
+var step = -1
 
-func init():
+func _ready():
 	SpacetimeDB.FightingForms.db.game.on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.game.on_delete(_on_game_delete)
 	SpacetimeDB.FightingForms.db.character.on_update(_on_character_update)
@@ -44,7 +47,7 @@ func init():
 		character_node.init(character.id)
 		
 		$HBoxContainer/Board/Board/MarginContainer.add_child(character_node)
-		$HBoxContainer/Board/Board.set_character_position(character_node, character.position)
+		$HBoxContainer/Board/Board.set_character_position(character_node, character.current_state.position)
 		characters.set(character.id, character_node)
 	
 	$HBoxContainer/Board/Board.characters_node = characters
@@ -70,7 +73,6 @@ func _on_game_update(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 	$HBoxContainer/SideMenu/SideMenuContainer/Round.text = "Round: " + str(new_game.round)
 
 func _on_game_delete(game: FightingFormsGame):
-	exit()
 	if SpacetimeDB.FightingForms.db.player.id.find(SpacetimeDB.FightingForms.get_local_identity()).eliminated:
 		loose.emit()
 	else:
@@ -80,7 +82,12 @@ func _on_game_delete(game: FightingFormsGame):
 func _on_character_update(prev_character: FightingFormsCharacter, new_character: FightingFormsCharacter):
 		var character_node: Node2D = characters.get(new_character.id)
 		if character_node != null:
-			$HBoxContainer/Board/Board.set_character_position(character_node, new_character.position)
+			var character_state: FightingFormsCharacterState
+			if step == -1:
+				character_state = new_character.current_state
+			else:
+				character_state = new_character.states[step] 
+			$HBoxContainer/Board/Board.set_character_position(character_node, character_state.position)
 			
 			if new_character.player_id == SpacetimeDB.FightingForms.get_local_identity():
 				update_actions(new_character)
@@ -103,8 +110,21 @@ func update_actions(character: FightingFormsCharacter):
 		child.update()
 		k += 1
 
-func exit():
+func _on_h_scroll_bar_scrolling() -> void:
+	step = $HBoxContainer/SideMenu/SideMenuContainer/HScrollBar.value
+	if step == 4:
+		step = -1
+	new_step.emit(step)
+
+func _exit_tree() -> void:
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.game.remove_on_delete(_on_game_delete)
 	SpacetimeDB.FightingForms.db.character.remove_on_update(_on_character_update)
 	SpacetimeDB.FightingForms.db.player.remove_on_update(_on_player_update)
+	
+#	Remove player nodes
+	for child in $HBoxContainer/SideMenu/SideMenuContainer/players.get_children():
+		child.queue_free()
+#	Remove characters
+	for character_node in characters.values():
+		character_node.queue_free()

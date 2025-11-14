@@ -1,4 +1,5 @@
 extends Control
+class_name Lobby
 
 var PLAYER_ICON_SCENE = preload("res://Menus/player_icon.tscn")
 
@@ -9,7 +10,7 @@ var is_ready = false
 
 var PLAYER_SELECT_SCENE = preload("res://Menus/Lobby/PlayerSelection.tscn")
 
-func init():
+func _ready():
 	SpacetimeDB.FightingForms.db.game.on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.player.on_update(_on_player_update)
 	
@@ -51,8 +52,6 @@ func _on_game_update(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 	if new_game.id == game_id:
 #		Start Game
 		if new_game.started:
-			SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
-			SpacetimeDB.FightingForms.db.player.remove_on_update(_on_player_update)
 			game_started.emit(game_id)
 #		Change participants
 		remove_players()
@@ -72,3 +71,7 @@ func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFor
 	for player_selection in $Players.get_children():
 		if player_selection.get_node("./PlayerIcon").player_id == new_player.id:
 			player_selection.set_connected(new_player.connected)
+
+func _exit_tree() -> void:
+	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
+	SpacetimeDB.FightingForms.db.player.remove_on_update(_on_player_update)

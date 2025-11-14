@@ -9,55 +9,35 @@ const table_names: Array[String] = ['character']
 @export var id: int 
 @export var game_id: int 
 @export var player_id: PackedByteArray 
-@export var position: FightingFormsPosition 
 @export var character_class_id: int 
-@export var hp: int 
-@export var mana: int 
-@export var stamina: int 
-@export var max_hp: int 
-@export var max_mana: int 
-@export var max_stamina: int 
 @export var choosen_actions: Array[Option] ## Array of Option of FightingFormsAction
+@export var current_state: FightingFormsCharacterState 
+@export var states: Array[FightingFormsCharacterState] 
 
 func _init() -> void:
 	set_meta('primary_key', 'id')
 	set_meta('bsatn_type_id', &'u64')
 	set_meta('bsatn_type_game_id', &'u64')
 	set_meta('bsatn_type_player_id', &'identity')
-	set_meta('bsatn_type_position', &'FightingFormsPosition')
 	set_meta('bsatn_type_character_class_id', &'u16')
-	set_meta('bsatn_type_hp', &'u8')
-	set_meta('bsatn_type_mana', &'u8')
-	set_meta('bsatn_type_stamina', &'u8')
-	set_meta('bsatn_type_max_hp', &'u8')
-	set_meta('bsatn_type_max_mana', &'u8')
-	set_meta('bsatn_type_max_stamina', &'u8')
 	set_meta('bsatn_type_choosen_actions', &'FightingFormsAction')
+	set_meta('bsatn_type_current_state', &'FightingFormsCharacterState')
+	set_meta('bsatn_type_states', &'FightingFormsCharacterState')
 
 ## 0. id: int[br]
 ## 1. game_id: int[br]
 ## 2. player_id: PackedByteArray[br]
-## 3. position: FightingFormsPosition[br]
-## 4. character_class_id: int[br]
-## 5. hp: int[br]
-## 6. mana: int[br]
-## 7. stamina: int[br]
-## 8. max_hp: int[br]
-## 9. max_mana: int[br]
-## 10. max_stamina: int[br]
-## 11. choosen_actions: Array of Option of FightingFormsAction[br]
-static func create(p_id: int, p_game_id: int, p_player_id: PackedByteArray, p_position: FightingFormsPosition, p_character_class_id: int, p_hp: int, p_mana: int, p_stamina: int, p_max_hp: int, p_max_mana: int, p_max_stamina: int, p_choosen_actions: Array[Option]) -> FightingFormsCharacter:
+## 3. character_class_id: int[br]
+## 4. choosen_actions: Array of Option of FightingFormsAction[br]
+## 5. current_state: FightingFormsCharacterState[br]
+## 6. states: Array of FightingFormsCharacterState[br]
+static func create(p_id: int, p_game_id: int, p_player_id: PackedByteArray, p_character_class_id: int, p_choosen_actions: Array[Option], p_current_state: FightingFormsCharacterState, p_states: Array[FightingFormsCharacterState]) -> FightingFormsCharacter:
 	var result = FightingFormsCharacter.new()
 	result.id = p_id
 	result.game_id = p_game_id
 	result.player_id = p_player_id
-	result.position = p_position
 	result.character_class_id = p_character_class_id
-	result.hp = p_hp
-	result.mana = p_mana
-	result.stamina = p_stamina
-	result.max_hp = p_max_hp
-	result.max_mana = p_max_mana
-	result.max_stamina = p_max_stamina
 	result.choosen_actions = p_choosen_actions
+	result.current_state = p_current_state
+	result.states = p_states
 	return result

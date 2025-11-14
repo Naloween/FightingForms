@@ -1,12 +1,15 @@
 extends Control
+class_name Bar
 
-enum bar_type{
+var step = -1
+
+enum BarType{
 	HP,
 	Mana,
 	Stamina
 }
 
-@export var type: bar_type
+@export var type: BarType
 var player_id: PackedByteArray
 
 func init(player_id: PackedByteArray):
@@ -31,27 +34,32 @@ func update(character: FightingFormsCharacter):
 	var node: Node
 	var max_elts: int
 	var current: int
-	if type == bar_type.HP:
+	var character_state: FightingFormsCharacterState
+	if step == -1:
+		character_state = character.current_state
+	else:
+		character_state = character.states[step]
+	if type == BarType.HP:
 		node = $HP
-		max_elts = character.max_hp
-		current = character.hp
-	elif type == bar_type.Mana:
+		max_elts = character_state.max_hp
+		current = character_state.hp
+	elif type == BarType.Mana:
 		node = $Mana
-		max_elts = character.max_mana
-		current = character.mana
+		max_elts = character_state.max_mana
+		current = character_state.mana
 	else:
 		node = $Stamina
-		max_elts = character.max_stamina
-		current = character.stamina
+		max_elts = character_state.max_stamina
+		current = character_state.stamina
 	for k in range(current):
 		var new_node = node.duplicate()
 		new_node.visible = true
 		$HBoxContainer.add_child(new_node)
 		
 #	Add empty elements
-	if type == bar_type.HP:
+	if type == BarType.HP:
 		node = $HP_empty
-	elif type == bar_type.Mana:
+	elif type == BarType.Mana:
 		node = $Mana_empty
 	else:
 		node = $Stamina_empty

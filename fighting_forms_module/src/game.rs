@@ -18,6 +18,8 @@ pub struct Game {
     pub started: bool,
     pub round: u8,
     pub ending: bool,
+    pub creator_id: Identity,
+    pub max_nb_players: u8,
 }
 
 #[reducer]
@@ -48,6 +50,8 @@ pub fn create_game(ctx: &ReducerContext) {
         started: false,
         round: 0,
         ending: false,
+        creator_id: ctx.sender,
+        max_nb_players: 4,
     });
     let player = ctx.db.player().id().find(ctx.sender).unwrap();
     ctx.db.player().id().update(Player {

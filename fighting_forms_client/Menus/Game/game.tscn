@@ -119,6 +119,19 @@ type = 2
 [node name="ChooseActions" type="HBoxContainer" parent="HBoxContainer/SideMenu/SideMenuContainer"]
 layout_mode = 2
 
+[node name="HScrollBar" type="HScrollBar" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 4.0
+step = 1.0
+value = 4.0
+rounded = true
+
+[node name="Step" type="Label" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+layout_mode = 2
+text = "View step: current"
+
 [node name="ChooseDirection" parent="." instance=ExtResource("6_rbg28")]
 visible = false
 layout_mode = 1
@@ -138,3 +151,4 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 
 [connection signal="pressed" from="HBoxContainer/SideMenu/SideMenuContainer/ReadyButton" to="." method="_on_button_pressed"]
+[connection signal="scrolling" from="HBoxContainer/SideMenu/SideMenuContainer/HScrollBar" to="." method="_on_h_scroll_bar_scrolling"]

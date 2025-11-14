@@ -7,7 +7,8 @@ offset_right = 134.0
 offset_bottom = 134.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
-text = "Enter Game"
+text = "Player's Game
+1/4"
 script = ExtResource("1_1ve6t")
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]

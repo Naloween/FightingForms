@@ -1,38 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://cir08ttbhlt0s"]
+[gd_scene load_steps=2 format=3 uid="uid://cir08ttbhlt0s"]
 
 [ext_resource type="Script" uid="uid://chg12uc8jm0qm" path="res://main.gd" id="1_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://cafsfws8upema" path="res://Menus/Title/title.tscn" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://c3ok6dsrmjtfn" path="res://Menus/GameSelect/game_select.tscn" id="3_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://bm45edubvrywx" path="res://Menus/Game/game.tscn" id="4_lquwl"]
-[ext_resource type="PackedScene" uid="uid://8wp4i0qt4twy" path="res://Menus/Lobby/lobby.tscn" id="5_lquwl"]
-[ext_resource type="PackedScene" uid="uid://c2j3pd0usoirl" path="res://Menus/End/Win.tscn" id="6_7mycd"]
-[ext_resource type="PackedScene" uid="uid://c8t0s6da8m0qe" path="res://Menus/End/Loose.tscn" id="7_272bh"]
 
 [node name="main" type="Node"]
 script = ExtResource("1_0xm2m")
-
-[node name="Title" parent="." instance=ExtResource("1_ig7tw")]
-
-[node name="GameSelect" parent="." instance=ExtResource("3_1bvp3")]
-visible = false
-
-[node name="Game" parent="." instance=ExtResource("4_lquwl")]
-visible = false
-
-[node name="Lobby" parent="." instance=ExtResource("5_lquwl")]
-visible = false
-game_id = 0
-
-[node name="Win" parent="." instance=ExtResource("6_7mycd")]
-visible = false
-
-[node name="Loose" parent="." instance=ExtResource("7_272bh")]
-visible = false
-
-[connection signal="play_signal" from="Title" to="." method="_on_title_play_signal"]
-[connection signal="enter_lobby" from="GameSelect" to="." method="_on_game_select_enter_lobby"]
-[connection signal="loose" from="Game" to="." method="_on_game_loose"]
-[connection signal="win" from="Game" to="." method="_on_game_win"]
-[connection signal="game_started" from="Lobby" to="." method="_on_lobby_game_started"]
-[connection signal="restart" from="Win" to="." method="_on_win_restart"]
-[connection signal="restart" from="Loose" to="." method="_on_loose_restart"]

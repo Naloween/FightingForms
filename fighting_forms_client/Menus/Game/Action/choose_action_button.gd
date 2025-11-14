@@ -39,16 +39,17 @@ func _on_id_pressed(id: int):
 		
 		var player = SpacetimeDB.FightingForms.db.player.id.find(SpacetimeDB.FightingForms.get_local_identity())
 		var character = SpacetimeDB.FightingForms.db.character.id.find(player.character_id.unwrap())
+		var character_state = character.current_state
 		
 		if action_class_config.name == "Move":
 			var direction = await choose_direction()
 			action = FightingFormsAction.create_move(FightingFormsMoveAction.create(direction))
 		elif action_class_config.name == "Zytex1":
 			damage_tiles_to_show = [
-				[Vector2i(character.position.x-1, character.position.y), 1],
-				[Vector2i(character.position.x, character.position.y-1), 1],
-				[Vector2i(character.position.x+1, character.position.y), 1],
-				[Vector2i(character.position.x, character.position.y+1), 1]]
+				[Vector2i(character_state.position.x-1, character_state.position.y), 1],
+				[Vector2i(character_state.position.x, character_state.position.y-1), 1],
+				[Vector2i(character_state.position.x+1, character_state.position.y), 1],
+				[Vector2i(character_state.position.x, character_state.position.y+1), 1]]
 			action = FightingFormsAction.create_zytex_1(FightingFormsZytex1Action.create())
 		elif action_class_config.name == "Zytex2":
 			var direction = await choose_direction()
@@ -61,18 +62,18 @@ func _on_id_pressed(id: int):
 
 			for k in range(1,4):
 				damage_tiles_to_show.append([
-					Vector2i(character.position.x+delta_x*k, character.position.y+delta_y*k), 1
+					Vector2i(character_state.position.x+delta_x*k, character_state.position.y+delta_y*k), 1
 				])
 			if delta_x ==0 or delta_y == 0:
 				damage_tiles_to_show.append([
-					Vector2i(character.position.x+delta_x*4, character.position.y+delta_y*4), 2
+					Vector2i(character_state.position.x+delta_x*4, character_state.position.y+delta_y*4), 2
 				])
 		elif action_class_config.name == "Zytex3":
 			var direction = await choose_direction()
 			action = FightingFormsAction.create_zytex_3(FightingFormsZytex3Action.create(direction))
 			var delta = direction_to_delta(direction)
 			damage_tiles_to_show=[[
-				Vector2i(character.position.x + delta.x, character.position.y + delta.y),1
+				Vector2i(character_state.position.x + delta.x, character_state.position.y + delta.y),1
 			]]
 			
 		elif action_class_config.name == "Bardass1":

@@ -1,6 +1,8 @@
 extends Node2D
+class_name Character
 
 var character_id: int
+var step = -1
 
 func init(new_character_id: int):
 	character_id = new_character_id
@@ -27,7 +29,12 @@ func set_size(size: int):
 
 func get_character_position() -> FightingFormsPosition:
 	var character = SpacetimeDB.FightingForms.db.character.id.find(character_id)
-	return character.position
+	var character_state: FightingFormsCharacterState
+	if step == -1:
+		character_state = character.current_state
+	else:
+		character_state = character.states[step]
+	return character_state.position
 
 func show_bars():
 	$HPBar.visible = true

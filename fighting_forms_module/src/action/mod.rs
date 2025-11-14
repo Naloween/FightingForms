@@ -198,13 +198,13 @@ pub fn get_action_effects(character: Character, action: Action) -> Vec<Effect> {
             vec![
                 Effect::Cost(CostConfig {
                     character_id,
-                    jauge_type: JaugeType::Stamina,
-                    amount: 1,
+                    jauge_type: JaugeType::Mana,
+                    amount: 2,
                 }),
                 Effect::Cost(CostConfig {
                     character_id,
-                    jauge_type: JaugeType::Mana,
-                    amount: 2,
+                    jauge_type: JaugeType::Stamina,
+                    amount: 1,
                 }),
                 Effect::Move(MoveConfig {
                     character_id,

@@ -1,8 +1,15 @@
 extends Node
 
-# Spacetime DB Setup ##############
+var title_node: Title = preload("res://Menus/Title/title.tscn").instantiate()
+var game_select_node: GameSelect = preload("res://Menus/GameSelect/game_select.tscn").instantiate()
+var game_node: Game = preload("res://Menus/Game/game.tscn").instantiate()
+var lobby_node: Lobby = preload("res://Menus/Lobby/lobby.tscn").instantiate()
+var win_node: End = preload("res://Menus/End/Win.tscn").instantiate()
+var loose_node: End = preload("res://Menus/End/Loose.tscn").instantiate()
 
 func _ready():
+#	SpacetimeDB setup
+
 	# Connect to signals BEFORE connecting to the DB
 	SpacetimeDB.FightingForms.connected.connect(_on_spacetimedb_connected)
 	SpacetimeDB.FightingForms.disconnected.connect(_on_spacetimedb_disconnected)
@@ -22,12 +29,21 @@ func _ready():
 
 	# Disable threading (e.g., for web builds)
 	# options.threading = false
-
 	SpacetimeDB.FightingForms.connect_db(
-		"http://88.170.179.219:50002", # Base HTTP URL
+		#"http://88.170.179.219:50002", # Base HTTP URL
+		"http://localhost:3000", # Base HTTP URL
 		"fighting-forms",             # Module Name
 		options
 	)
+	
+	# Connect signals
+	title_node.play_signal.connect(_on_title_play_signal)
+	game_select_node.enter_lobby.connect(_on_game_select_enter_lobby)
+	lobby_node.game_started.connect(_on_lobby_game_started)
+	game_node.win.connect(_on_game_win)
+	game_node.loose.connect(_on_game_loose)
+	win_node.restart.connect(_on_win_restart)
+	loose_node.restart.connect(_on_loose_restart)
 
 func _on_spacetimedb_connected(identity: PackedByteArray, token: String):
 	print("Game: Connected to SpacetimeDB!")
@@ -48,12 +64,8 @@ func _on_spacetimedb_connected(identity: PackedByteArray, token: String):
 
 func _on_subscription_applied():
 	print("Game: Initial subscription applied.")
-	# Safe to query the local DB for initially subscribed data
-	var initial_players = SpacetimeDB.FightingForms.db.player.iter()
-	print("Initial players found: %d" % initial_players.size())
-	var identity = SpacetimeDB.FightingForms.get_local_identity()
-	var current_player = SpacetimeDB.FightingForms.db.player.id.find(identity)
-	# ... setup initial game state ...
+	#	Add title screen
+	add_child(title_node)
 
 func _on_spacetimedb_disconnected():
 	print("Game: Disconnected.")
@@ -65,42 +77,36 @@ func _on_transaction_update(update: TransactionUpdateMessage):
 	# Handle results/errors from reducer calls
 	if update.status.status_type == UpdateStatusData.StatusType.FAILED:
 		printerr("Reducer call (ReqID: %d) failed: %s" % [update.reducer_call.request_id, update.status.failure_message])
-	elif update.status.status_type == UpdateStatusData.StatusType.COMMITTED:
-		print("Reducer call (ReqID: %d) committed." % update.reducer_call.request_id)
-		# Optionally inspect update.status.committed_update for DB changes
 
 # Menu Management #############
 
 func _on_title_play_signal() -> void:
-	$Title.visible = false
-	$GameSelect.init()
-	$GameSelect.visible = true
+	remove_child(title_node)
+	add_child(game_select_node)
 
 func _on_game_select_enter_lobby(game_id: int) -> void:
-	$GameSelect.visible = false
-	$Lobby.visible = true
-	$Lobby.game_id = game_id
-	$Lobby.init()
+	remove_child(game_select_node)
+	lobby_node.game_id = game_id
+	add_child(lobby_node)
 
 
 func _on_lobby_game_started(game_id: int) -> void:
-	$Game.game_id = game_id
-	$Game.init()
-	$Lobby.visible = false
-	$Game.visible = true
+	remove_child(lobby_node)
+	game_node.game_id = game_id
+	add_child(game_node)
 
 func _on_game_win() -> void:
-	$Win.visible = true
-	$Game.visible = false
+	remove_child(game_node)
+	add_child(win_node)
 
 func _on_game_loose() -> void:
-	$Loose.visible = true
-	$Game.visible = false
+	remove_child(game_node)
+	add_child(loose_node)
 
 func _on_win_restart() -> void:
-	$Win.visible = false
-	$Title.visible = true
+	remove_child(win_node)
+	add_child(title_node)
 
 func _on_loose_restart() -> void:
-	$Win.visible = false
-	$Title.visible = true
+	remove_child(loose_node)
+	add_child(title_node)

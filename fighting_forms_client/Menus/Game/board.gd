@@ -1,4 +1,5 @@
 extends AspectRatioContainer
+class_name  Board
 
 @export var board_size = 6
 var margin = 10
@@ -19,6 +20,8 @@ func _ready():
 			tile.visible = false
 			$MarginContainer.add_child(tile)
 			damage_tiles[-1].append(tile)
+	
+	SpacetimeDB.FightingForms.db.game.on_update(_on_game_update)
 
 func _notification(what):
 	if damage_tiles.size() == 0:
@@ -51,3 +54,15 @@ func hide_damage_tile(position: Vector2i):
 	if position[0] < board_size && position[1] < board_size && position[0] >= 0 && position[1]>= 0:
 		var tile = damage_tiles[position[1]][position[0]]
 		tile.visible = false
+
+func hide_all_damage_tile():
+	for line in damage_tiles:
+		for tile in line:
+			tile.visible = false
+
+func _on_game_update(old_game: FightingFormsGame, new_game: FightingFormsGame):
+	if new_game.round != old_game.round:
+		hide_all_damage_tile()
+
+func _exit_tree() -> void:
+	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
