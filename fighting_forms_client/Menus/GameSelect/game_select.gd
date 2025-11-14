@@ -22,11 +22,10 @@ func _on_enter_game(game_id: int):
 func _on_insert_game(insert_game: FightingFormsGame):
 	if !insert_game.started:
 		var node = GameButton.create_game_button(insert_game.id)
-		node.connect("enter_game", _on_enter_game)
+		node.enter_game.connect(_on_enter_game)
 		$Games.add_child(node)
 		if insert_game.players.has(SpacetimeDB.FightingForms.get_local_identity()):
 			enter_lobby.emit(insert_game.id)
-
 
 func _on_update_game(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 	if new_game.started:
