@@ -9,7 +9,6 @@ use crate::{
 pub const NB_STEPS: u8 = 4;
 
 #[table(name = game, public)]
-#[derive(Clone)]
 pub struct Game {
     #[primary_key]
     #[auto_inc]
@@ -20,6 +19,7 @@ pub struct Game {
     pub ending: bool,
     pub creator_id: Identity,
     pub max_nb_players: u8,
+    pub round_effects: Vec<AppliedEffect>,
 }
 
 #[reducer]
@@ -52,6 +52,7 @@ pub fn create_game(ctx: &ReducerContext) {
         ending: false,
         creator_id: ctx.sender,
         max_nb_players: 4,
+        round_effects: Vec::new(),
     });
     let player = ctx.db.player().id().find(ctx.sender).unwrap();
     ctx.db.player().id().update(Player {
@@ -90,10 +91,9 @@ pub fn ready(ctx: &ReducerContext, is_ready: bool) {
             });
 
             if all_ready {
-                // If game started finish round
                 if game.started {
                     next_round(ctx, game);
-                } else {
+                } else if game.players.len() >= 1 {
                     start_game(ctx, game);
                 }
             }
@@ -119,6 +119,8 @@ pub fn start_game(ctx: &ReducerContext, game: Game) {
 }
 
 pub fn next_round(ctx: &ReducerContext, game: Game) {
+    let mut round_effects: Vec<AppliedEffect> = Vec::new();
+
     // Start round effects
     let mut effects: Vec<Vec<Effect>> = vec![];
     for player_id in &game.players {
@@ -137,7 +139,8 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
         ]);
     }
     for effect_chain in effects {
-        apply_effect_chain(ctx, effect_chain);
+        let mut applied_effects = apply_effect_chain(ctx, effect_chain, 0);
+        round_effects.append(&mut applied_effects);
     }
 
     // Apply actions at each step
@@ -165,13 +168,12 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
         }
 
         // Apply effects
-        log::info!("Apply effects...");
         for effect_chain in effects {
-            apply_effect_chain(ctx, effect_chain);
+            let mut applied_effects = apply_effect_chain(ctx, effect_chain, step + 1);
+            round_effects.append(&mut applied_effects);
         }
     }
 
-    // Check if game still exists
     for player_id in &game.players {
         // Unready players
         let player = ctx.db.player().id().find(player_id).unwrap();
@@ -198,17 +200,19 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
 
     ctx.db.game().id().update(Game {
         round: game.round + 1,
-        ..game.clone()
+        round_effects,
+        ..game
     });
 
-    log::info!("Game ending: {:?}", game.ending);
     if game.ending {
-        end_game(ctx, &game);
+        end_game(ctx, game.id);
     }
 }
 
-pub fn end_game(ctx: &ReducerContext, game: &Game) {
-    for player_id in &game.players {
+pub fn end_game(ctx: &ReducerContext, game_id: u64) {
+    let game = ctx.db.game().id().find(game_id).unwrap();
+
+    for player_id in game.players {
         let player = ctx.db.player().id().find(player_id).unwrap();
 
         // Delete character
@@ -239,7 +243,7 @@ pub fn quit_game(ctx: &ReducerContext) {
         .collect();
 
     if new_players.len() == 0 || (game.started && new_players.len() == 1) {
-        end_game(ctx, &game);
+        end_game(ctx, game.id);
     } else {
         // Update game
         ctx.db.game().id().update(Game {

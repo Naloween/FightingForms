@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dcj2bmrwrbobo"]
+
+[ext_resource type="Script" uid="uid://cutoetm8aw8xy" path="res://Effects/DamageTile/damage_tile_effect.gd" id="1_j6r7g"]
+
+[node name="DamageTileEffect" type="Node2D"]
+script = ExtResource("1_j6r7g")

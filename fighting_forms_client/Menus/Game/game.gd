@@ -21,6 +21,8 @@ func _ready():
 	SpacetimeDB.FightingForms.db.character.on_update(_on_character_update)
 	SpacetimeDB.FightingForms.db.player.on_update(_on_player_update)
 	
+	GlobalSignal.add_emitter(new_step)
+	
 	var game = SpacetimeDB.FightingForms.db.game.id.find(game_id)
 	
 	var current_player_id = SpacetimeDB.FightingForms.get_local_identity()
@@ -47,7 +49,7 @@ func _ready():
 		character_node.init(character.id)
 		
 		$HBoxContainer/Board/Board/MarginContainer.add_child(character_node)
-		$HBoxContainer/Board/Board.set_character_position(character_node, character.current_state.position)
+		character_node.set_node_position(character.current_state.position.x, character.current_state.position.y)
 		characters.set(character.id, character_node)
 	
 	$HBoxContainer/Board/Board.characters_node = characters
@@ -67,11 +69,59 @@ func _ready():
 		action_button.board = $HBoxContainer/Board/Board
 		action_button.init()
 		$HBoxContainer/SideMenu/SideMenuContainer/ChooseActions.add_child(action_button)
+
+func update_actions(character: FightingFormsCharacter):
+	var k = 0
+	for child in $HBoxContainer/SideMenu/SideMenuContainer/ChooseActions.get_children():
+		child.action = character.choosen_actions[k]
+		child.update()
+		k += 1
+
+func update_step(_step: int):
+	if _step == 4:
+		step = -1
+		$HBoxContainer/SideMenu/SideMenuContainer/Step.text = "View step: Current"
+	else:
+		step = _step
+		$HBoxContainer/SideMenu/SideMenuContainer/Step.text = "View step: "+str(step)
+	new_step.emit(step)
 	
+	
+# Events
+
 func _on_game_update(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 	# Set round label
 	$HBoxContainer/SideMenu/SideMenuContainer/Round.text = "Round: " + str(new_game.round)
-
+	
+	update_step(0)
+	
+#	Show effects
+	for applied_effect in new_game.round_effects:
+		if !applied_effect.applied:
+			continue
+		if applied_effect.effect.value == FightingFormsEffect.Cost:
+			var cost_config = applied_effect.effect.get_cost()
+			var node = CostEffect.create_cost_effect(cost_config.amount, cost_config.jauge_type)
+			var character_node = characters.get(cost_config.character_id)
+			node.position.y = -character_node.tile_size/2
+			character_node.add_child(node)
+			await node.finished
+		elif applied_effect.effect.value == FightingFormsEffect.Move:
+			var move_config = applied_effect.effect.get_move()
+			var character_node = characters.get(move_config.character_id)
+			var node = MoveEffect.create_move_effect(character_node, move_config.direction, move_config.distance)
+			character_node.add_child(node)
+			await node.finished
+		elif applied_effect.effect.value == FightingFormsEffect.DamageTile:
+			var damage_tile_config = applied_effect.effect.get_damage_tile()
+			var node = DamageTileEffect.create_damage_tile_effect($HBoxContainer/Board/Board, Vector2i(damage_tile_config.position.x, damage_tile_config.position.y),
+				damage_tile_config.amount)
+			add_child(node)
+			await node.finished
+	
+	update_step(4)
+	
+			
 func _on_game_delete(game: FightingFormsGame):
 	if SpacetimeDB.FightingForms.db.player.id.find(SpacetimeDB.FightingForms.get_local_identity()).eliminated:
 		loose.emit()
@@ -80,17 +130,8 @@ func _on_game_delete(game: FightingFormsGame):
 
 
 func _on_character_update(prev_character: FightingFormsCharacter, new_character: FightingFormsCharacter):
-		var character_node: Node2D = characters.get(new_character.id)
-		if character_node != null:
-			var character_state: FightingFormsCharacterState
-			if step == -1:
-				character_state = new_character.current_state
-			else:
-				character_state = new_character.states[step] 
-			$HBoxContainer/Board/Board.set_character_position(character_node, character_state.position)
-			
-			if new_character.player_id == SpacetimeDB.FightingForms.get_local_identity():
-				update_actions(new_character)
+	if new_character.player_id == SpacetimeDB.FightingForms.get_local_identity():
+		update_actions(new_character)
 
 func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFormsPlayer):
 	if new_player.id == SpacetimeDB.FightingForms.get_local_identity():
@@ -103,24 +144,17 @@ func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFor
 func _on_button_pressed() -> void:
 	SpacetimeDB.FightingForms.reducers.ready(!is_ready)
 
-func update_actions(character: FightingFormsCharacter):
-	var k = 0
-	for child in $HBoxContainer/SideMenu/SideMenuContainer/ChooseActions.get_children():
-		child.action = character.choosen_actions[k]
-		child.update()
-		k += 1
-
 func _on_h_scroll_bar_scrolling() -> void:
-	step = $HBoxContainer/SideMenu/SideMenuContainer/HScrollBar.value
-	if step == 4:
-		step = -1
-	new_step.emit(step)
+	var _step = $HBoxContainer/SideMenu/SideMenuContainer/HScrollBar.value
+	update_step(_step)
 
 func _exit_tree() -> void:
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.game.remove_on_delete(_on_game_delete)
 	SpacetimeDB.FightingForms.db.character.remove_on_update(_on_character_update)
 	SpacetimeDB.FightingForms.db.player.remove_on_update(_on_player_update)
+	
+	GlobalSignal.remove_emitter(new_step)
 	
 #	Remove player nodes
 	for child in $HBoxContainer/SideMenu/SideMenuContainer/players.get_children():

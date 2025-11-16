@@ -46,4 +46,16 @@ const CharacterState = preload('res://spacetime_bindings/schema/types/fighting_f
 const Position = preload('res://spacetime_bindings/schema/types/fighting_forms_position.gd')
 const CharacterClass = preload('res://spacetime_bindings/schema/types/fighting_forms_character_class.gd')
 const Game = preload('res://spacetime_bindings/schema/types/fighting_forms_game.gd')
+const AppliedEffect = preload('res://spacetime_bindings/schema/types/fighting_forms_applied_effect.gd')
+const Effect = preload('res://spacetime_bindings/schema/types/fighting_forms_effect.gd')
+const CostConfig = preload('res://spacetime_bindings/schema/types/fighting_forms_cost_config.gd')
+enum JaugeType {
+	Hp,
+	Mana,
+	Stamina
+}
+const RestoreConfig = preload('res://spacetime_bindings/schema/types/fighting_forms_restore_config.gd')
+const MoveConfig = preload('res://spacetime_bindings/schema/types/fighting_forms_move_config.gd')
+const TeleportConfig = preload('res://spacetime_bindings/schema/types/fighting_forms_teleport_config.gd')
+const DamageTileConfig = preload('res://spacetime_bindings/schema/types/fighting_forms_damage_tile_config.gd')
 const Player = preload('res://spacetime_bindings/schema/types/fighting_forms_player.gd')

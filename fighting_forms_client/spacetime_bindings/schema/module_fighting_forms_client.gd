@@ -25,6 +25,14 @@ const CharacterState = Types.CharacterState
 const Position = Types.Position
 const CharacterClass = Types.CharacterClass
 const Game = Types.Game
+const AppliedEffect = Types.AppliedEffect
+const Effect = Types.Effect
+const CostConfig = Types.CostConfig
+const JaugeType = Types.JaugeType
+const RestoreConfig = Types.RestoreConfig
+const MoveConfig = Types.MoveConfig
+const TeleportConfig = Types.TeleportConfig
+const DamageTileConfig = Types.DamageTileConfig
 const Player = Types.Player
 
 var reducers: FightingFormsModuleReducers

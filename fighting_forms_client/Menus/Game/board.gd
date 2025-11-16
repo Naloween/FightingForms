@@ -37,12 +37,9 @@ func _notification(what):
 		
 		for character_node in characters_node.values():
 			var position = character_node.get_character_position()
-			set_character_position(character_node, position)
-			character_node.set_size(tile_size)
-
-func set_character_position(character_node: Node2D, new_position: FightingFormsPosition):
-	character_node.position.x = offset + tile_size * new_position.x
-	character_node.position.y = offset + tile_size * new_position.y
+			character_node.set_tile_size(tile_size)
+			character_node.set_offset(offset)
+			character_node.set_node_position(position.x, position.y)
 
 func show_damage_tile(position: Vector2i, damage: int):
 	if position[0] < board_size && position[1]< board_size && position[0] >= 0 && position[1]>= 0:

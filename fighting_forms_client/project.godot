@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 SpacetimeDB="*res://spacetime_bindings/schema/spacetime_autoload.gd"
+GlobalSignal="*res://global_signal.gd"
 
 [editor_plugins]
 

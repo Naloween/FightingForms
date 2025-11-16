@@ -7,7 +7,14 @@ use crate::{
     Direction, Position,
 };
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone)]
+pub struct AppliedEffect {
+    effect: Effect,
+    applied: bool,
+    step: u8,
+}
+
+#[derive(SpacetimeType, Clone)]
 pub enum Effect {
     Cost(CostConfig),
     Restore(RestoreConfig),
@@ -16,53 +23,76 @@ pub enum Effect {
     DamageTile(DamageTileConfig),
 }
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone)]
 pub struct CostConfig {
     pub character_id: u64,
     pub jauge_type: JaugeType,
     pub amount: u8,
 }
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone)]
 pub struct RestoreConfig {
     pub character_id: u64,
     pub jauge_type: JaugeType,
     pub amount: u8,
 }
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone)]
 pub struct MoveConfig {
     pub character_id: u64,
     pub direction: Direction,
     pub distance: u8,
 }
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone)]
 pub struct TeleportConfig {
     pub character_id: u64,
     pub position: Position,
 }
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone)]
 pub struct DamageTileConfig {
     pub position: Position,
     pub amount: u8,
 }
 
-pub fn apply_effect_chain(ctx: &ReducerContext, effect_chain: Vec<Effect>) {
-    for effect in effect_chain {
-        let applied = match effect {
-            Effect::Cost(cost_config) => cost_effect(ctx, cost_config),
-            Effect::Restore(restore_config) => restore_effect(ctx, restore_config),
-            Effect::Move(move_config) => move_effect(ctx, move_config),
-            Effect::Teleport(teleport_config) => teleport_effect(ctx, teleport_config),
-            Effect::DamageTile(damage_tile_config) => damage_tile_effect(ctx, damage_tile_config),
-        };
+pub fn apply_effect_chain(
+    ctx: &ReducerContext,
+    effect_chain: Vec<Effect>,
+    step: u8,
+) -> Vec<AppliedEffect> {
+    let mut applied_effects: Vec<AppliedEffect> = Vec::with_capacity(effect_chain.len());
+    let mut continue_chain: bool = true;
 
-        if !applied {
-            return;
+    for effect in effect_chain {
+        if continue_chain {
+            let applied = match effect.clone() {
+                Effect::Cost(cost_config) => cost_effect(ctx, cost_config),
+                Effect::Restore(restore_config) => restore_effect(ctx, restore_config),
+                Effect::Move(move_config) => move_effect(ctx, move_config),
+                Effect::Teleport(teleport_config) => teleport_effect(ctx, teleport_config),
+                Effect::DamageTile(damage_tile_config) => {
+                    damage_tile_effect(ctx, damage_tile_config)
+                }
+            };
+            applied_effects.push(AppliedEffect {
+                effect,
+                applied,
+                step,
+            });
+            if !applied {
+                continue_chain = false;
+            }
+        } else {
+            applied_effects.push(AppliedEffect {
+                effect,
+                applied: false,
+                step,
+            });
         }
     }
+
+    return applied_effects;
 }
 
 pub fn cost_effect(ctx: &ReducerContext, config: CostConfig) -> bool {
@@ -190,7 +220,6 @@ pub fn move_effect(ctx: &ReducerContext, config: MoveConfig) -> bool {
         x: (character.current_state.position.x as i32 + delta_x * config.distance as i32) as u8,
         y: (character.current_state.position.y as i32 + delta_y * config.distance as i32) as u8,
     };
-    log::info!("position y: {:?}", new_position.y);
 
     return teleport_effect(
         ctx,
@@ -202,17 +231,14 @@ pub fn move_effect(ctx: &ReducerContext, config: MoveConfig) -> bool {
 }
 
 pub fn teleport_effect(ctx: &ReducerContext, config: TeleportConfig) -> bool {
-    log::info!("Start teleport effect");
-
     let character = ctx.db.character().id().find(config.character_id).unwrap();
 
     // Check collision with other character
-    for other_character in ctx.db.character().iter() {
+    for other_character in ctx.db.character().game_id().filter(character.game_id) {
         if other_character.current_state.position == config.position {
             return false;
         }
     }
-    log::info!("Teleporting character");
 
     // Teleport character
     ctx.db.character().id().update(Character {
@@ -228,18 +254,9 @@ pub fn teleport_effect(ctx: &ReducerContext, config: TeleportConfig) -> bool {
 
 pub fn damage_tile_effect(ctx: &ReducerContext, config: DamageTileConfig) -> bool {
     // Apply damage to any character on a the tile
-    for character in ctx.db.character().iter() {
-        if character.game_id
-            == ctx
-                .db
-                .player()
-                .id()
-                .find(ctx.sender)
-                .unwrap()
-                .game_id
-                .unwrap()
-            && character.current_state.position == config.position
-        {
+    let player = ctx.db.player().id().find(ctx.sender).unwrap();
+    for character in ctx.db.character().game_id().filter(player.game_id.unwrap()) {
+        if character.current_state.position == config.position {
             apply_damage_character(ctx, character, config.amount);
         }
     }
@@ -265,8 +282,6 @@ fn apply_damage_character(ctx: &ReducerContext, character: Character, damage: u8
 }
 
 fn eliminate_player(ctx: &ReducerContext, player_id: Identity) {
-    log::info!("Eliminate player");
-
     let player = ctx.db.player().id().find(player_id).unwrap();
 
     // Update player status
@@ -285,10 +300,8 @@ fn eliminate_player(ctx: &ReducerContext, player_id: Identity) {
             nb_alive_players += 1;
         }
     }
-    log::info!("Alive players: {:?}", nb_alive_players);
 
     if nb_alive_players <= 1 {
-        log::info!("End game");
         ctx.db.game().id().update(Game {
             ending: true,
             ..game

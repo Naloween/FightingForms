@@ -1,4 +1,6 @@
-use spacetimedb::{reducer, table, Identity, ReducerContext, SpacetimeType, Table};
+use spacetimedb::{
+    rand::seq::index, reducer, table, Identity, ReducerContext, SpacetimeType, Table,
+};
 
 use crate::{
     action::*,
@@ -36,6 +38,7 @@ pub struct Character {
     #[primary_key]
     #[auto_inc]
     pub id: u64,
+    #[index(btree)]
     pub game_id: u64,
     pub player_id: Identity,
     pub character_class_id: u16,
@@ -44,7 +47,7 @@ pub struct Character {
     pub states: Vec<CharacterState>,
 }
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Clone, PartialEq, Eq)]
 pub enum JaugeType {
     HP,
     Mana,

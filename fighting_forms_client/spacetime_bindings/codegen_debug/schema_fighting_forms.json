@@ -443,6 +443,15 @@
 				{
 					"name": "max_nb_players",
 					"type": "U8"
+				},
+				{
+					"name": "round_effects",
+					"nested_type": [
+						"Array"
+					],
+					"is_array": true,
+					"type": "AppliedEffect",
+					"type_idx": 20
 				}
 			],
 			"table_names": [
@@ -453,6 +462,147 @@
 			"primary_key_name": "id",
 			"is_public": [
 				true
+			]
+		},
+		{
+			"name": "AppliedEffect",
+			"struct": [
+				{
+					"name": "effect",
+					"type": "Effect",
+					"type_idx": 21
+				},
+				{
+					"name": "applied",
+					"type": "Bool"
+				},
+				{
+					"name": "step",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "Effect",
+			"is_sum_type": true,
+			"enum": [
+				{
+					"name": "Cost",
+					"type": "CostConfig"
+				},
+				{
+					"name": "Restore",
+					"type": "RestoreConfig"
+				},
+				{
+					"name": "Move",
+					"type": "MoveConfig"
+				},
+				{
+					"name": "Teleport",
+					"type": "TeleportConfig"
+				},
+				{
+					"name": "DamageTile",
+					"type": "DamageTileConfig"
+				}
+			]
+		},
+		{
+			"name": "CostConfig",
+			"struct": [
+				{
+					"name": "character_id",
+					"type": "U64"
+				},
+				{
+					"name": "jauge_type",
+					"type": "JaugeType",
+					"type_idx": 23
+				},
+				{
+					"name": "amount",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "JaugeType",
+			"is_sum_type": false,
+			"enum": [
+				{
+					"name": "HP"
+				},
+				{
+					"name": "Mana"
+				},
+				{
+					"name": "Stamina"
+				}
+			]
+		},
+		{
+			"name": "RestoreConfig",
+			"struct": [
+				{
+					"name": "character_id",
+					"type": "U64"
+				},
+				{
+					"name": "jauge_type",
+					"type": "JaugeType",
+					"type_idx": 23
+				},
+				{
+					"name": "amount",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "MoveConfig",
+			"struct": [
+				{
+					"name": "character_id",
+					"type": "U64"
+				},
+				{
+					"name": "direction",
+					"type": "Direction",
+					"type_idx": 5
+				},
+				{
+					"name": "distance",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "TeleportConfig",
+			"struct": [
+				{
+					"name": "character_id",
+					"type": "U64"
+				},
+				{
+					"name": "position",
+					"type": "Position",
+					"type_idx": 17
+				}
+			]
+		},
+		{
+			"name": "DamageTileConfig",
+			"struct": [
+				{
+					"name": "position",
+					"type": "Position",
+					"type_idx": 17
+				},
+				{
+					"name": "amount",
+					"type": "U8"
+				}
 			]
 		},
 		{
@@ -639,7 +789,7 @@
 		},
 		{
 			"name": "player",
-			"type_idx": 20,
+			"type_idx": 28,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -700,6 +850,14 @@
 		"Position": "FightingFormsPosition",
 		"CharacterClass": "FightingFormsCharacterClass",
 		"Game": "FightingFormsGame",
+		"AppliedEffect": "FightingFormsAppliedEffect",
+		"Effect": "FightingFormsEffect",
+		"CostConfig": "FightingFormsCostConfig",
+		"JaugeType": "FightingFormsModuleClient.Types.JaugeType",
+		"RestoreConfig": "FightingFormsRestoreConfig",
+		"MoveConfig": "FightingFormsMoveConfig",
+		"TeleportConfig": "FightingFormsTeleportConfig",
+		"DamageTileConfig": "FightingFormsDamageTileConfig",
 		"Player": "FightingFormsPlayer"
 	},
 	"meta_type_map": {
@@ -749,6 +907,14 @@
 		"Position": "FightingFormsPosition",
 		"CharacterClass": "FightingFormsCharacterClass",
 		"Game": "FightingFormsGame",
+		"AppliedEffect": "FightingFormsAppliedEffect",
+		"Effect": "FightingFormsEffect",
+		"CostConfig": "FightingFormsCostConfig",
+		"JaugeType": "u8",
+		"RestoreConfig": "FightingFormsRestoreConfig",
+		"MoveConfig": "FightingFormsMoveConfig",
+		"TeleportConfig": "FightingFormsTeleportConfig",
+		"DamageTileConfig": "FightingFormsDamageTileConfig",
 		"Player": "FightingFormsPlayer"
 	},
 	"typespace": [
@@ -1583,6 +1749,262 @@
 					{
 						"name": {
 							"some": "max_nb_players"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "round_effects"
+						},
+						"algebraic_type": {
+							"Array": {
+								"Ref": 20.0
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "effect"
+						},
+						"algebraic_type": {
+							"Ref": 21.0
+						}
+					},
+					{
+						"name": {
+							"some": "applied"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					},
+					{
+						"name": {
+							"some": "step"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "Cost"
+						},
+						"algebraic_type": {
+							"Ref": 22.0
+						}
+					},
+					{
+						"name": {
+							"some": "Restore"
+						},
+						"algebraic_type": {
+							"Ref": 24.0
+						}
+					},
+					{
+						"name": {
+							"some": "Move"
+						},
+						"algebraic_type": {
+							"Ref": 25.0
+						}
+					},
+					{
+						"name": {
+							"some": "Teleport"
+						},
+						"algebraic_type": {
+							"Ref": 26.0
+						}
+					},
+					{
+						"name": {
+							"some": "DamageTile"
+						},
+						"algebraic_type": {
+							"Ref": 27.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "character_id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "jauge_type"
+						},
+						"algebraic_type": {
+							"Ref": 23.0
+						}
+					},
+					{
+						"name": {
+							"some": "amount"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "HP"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Mana"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Stamina"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "character_id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "jauge_type"
+						},
+						"algebraic_type": {
+							"Ref": 23.0
+						}
+					},
+					{
+						"name": {
+							"some": "amount"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "character_id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "direction"
+						},
+						"algebraic_type": {
+							"Ref": 5.0
+						}
+					},
+					{
+						"name": {
+							"some": "distance"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "character_id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "position"
+						},
+						"algebraic_type": {
+							"Ref": 17.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "position"
+						},
+						"algebraic_type": {
+							"Ref": 17.0
+						}
+					},
+					{
+						"name": {
+							"some": "amount"
 						},
 						"algebraic_type": {
 							"U8": []

@@ -3,6 +3,12 @@ class_name Character
 
 var character_id: int
 var step = -1
+var offset = 50
+var tile_size = 100
+
+func _ready() -> void:
+	GlobalSignal.add_listener("new_step", _on_new_step)
+	SpacetimeDB.FightingForms.db.character.on_update(_on_character_update)
 
 func init(new_character_id: int):
 	character_id = new_character_id
@@ -24,8 +30,12 @@ func init(new_character_id: int):
 	elif character_class.name == "Stunlor":
 		$Stunlor.visible = true
 
-func set_size(size: int):
+func set_tile_size(size: int):
 	scale = Vector2(size/100.0, size/100.0)
+	tile_size = size
+
+func set_offset(new_offset: int):
+	offset = new_offset
 
 func get_character_position() -> FightingFormsPosition:
 	var character = SpacetimeDB.FightingForms.db.character.id.find(character_id)
@@ -36,6 +46,10 @@ func get_character_position() -> FightingFormsPosition:
 		character_state = character.states[step]
 	return character_state.position
 
+func set_node_position(new_position_x: float, new_position_y: float):
+	position.x = offset + tile_size * new_position_x
+	position.y = offset + tile_size * new_position_y
+
 func show_bars():
 	$HPBar.visible = true
 	$ManaBar.visible = true
@@ -45,6 +59,15 @@ func hide_bars():
 	$HPBar.visible = false
 	$ManaBar.visible = false
 	$StaminaBar.visible = false
+
+func _on_new_step(new_step: int):
+	step = new_step
+	var pos = get_character_position()
+	set_node_position(pos.x, pos.y)
+
+func _on_character_update(old_character: FightingFormsCharacter, new_character: FightingFormsCharacter):
+	var pos = get_character_position()
+	set_node_position(pos.x, pos.y)
 
 func _on_bardass_mouse_entered() -> void:
 	show_bars()
@@ -67,3 +90,6 @@ func _on_stunlor_mouse_entered() -> void:
 
 func _on_stunlor_mouse_exited() -> void:
 	hide_bars()
+
+func _exit_tree() -> void:
+	GlobalSignal.remove_listener("new_step", _on_new_step)

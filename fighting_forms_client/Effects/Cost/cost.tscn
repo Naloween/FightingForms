@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://b6k8mk5uxr3rh"]
+
+[ext_resource type="Script" uid="uid://lc5d2f42ivoy" path="res://Effects/Cost/cost.gd" id="1_2ff8w"]
+[ext_resource type="Texture2D" uid="uid://2d26ibg78x2l" path="res://Characters/Bar/Health.svg" id="2_67b7m"]
+[ext_resource type="Texture2D" uid="uid://bhnpygpo6v0xy" path="res://Characters/Bar/Mana.svg" id="3_axdk3"]
+[ext_resource type="Texture2D" uid="uid://b3ardr84r13c5" path="res://Characters/Bar/Stamina.svg" id="4_6tkx5"]
+
+[node name="CostEffect" type="Node2D"]
+script = ExtResource("1_2ff8w")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 32
+text = " - 0"
+
+[node name="Hp" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(71.5, 22)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_67b7m")
+
+[node name="Mana" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(71.5, 22)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_axdk3")
+
+[node name="Stamina" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(71.5, 22)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_6tkx5")
