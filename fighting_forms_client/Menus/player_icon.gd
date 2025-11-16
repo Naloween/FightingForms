@@ -2,10 +2,12 @@ extends Control
 
 @export var player_id: PackedByteArray
 
+func _ready() -> void:
+	SpacetimeDB.FightingForms.db.player.on_update(_on_player_update)
+
 func init(player: FightingFormsPlayer):
 	player_id = player.id
 	set_player_name(player.name)
-	SpacetimeDB.FightingForms.db.player.on_update(_on_player_update)
 
 func set_player_name(name: String):
 	$Label.text = name
@@ -29,3 +31,6 @@ func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFor
 	if new_player.id == player_id:
 		set_ready(new_player.ready)
 		set_connected(new_player.connected)
+
+func _exit_tree() -> void:
+	SpacetimeDB.FightingForms.db.player.remove_on_update(_on_player_update)
