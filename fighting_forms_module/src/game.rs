@@ -4,6 +4,7 @@ use crate::{
     action::{effect::*, get_action_effects},
     character::*,
     player::*,
+    Position,
 };
 
 pub const NB_STEPS: u8 = 4;
@@ -14,6 +15,7 @@ pub struct Game {
     #[auto_inc]
     pub id: u64,
     pub players: Vec<Identity>,
+    pub size: u8,
     pub started: bool,
     pub round: u8,
     pub ending: bool,
@@ -44,9 +46,16 @@ pub fn select_game(ctx: &ReducerContext, game_id: u64) {
 
 #[reducer]
 pub fn create_game(ctx: &ReducerContext) {
+    log::info!("Creating game for player {:?}", ctx.sender);
+    let player = ctx.db.player().id().find(ctx.sender).unwrap();
+    if player.game_id.is_some() {
+        return;
+    }
+
     let game = ctx.db.game().insert(Game {
         id: 0,
         players: vec![ctx.sender],
+        size: 10,
         started: false,
         round: 0,
         ending: false,
@@ -54,7 +63,6 @@ pub fn create_game(ctx: &ReducerContext) {
         max_nb_players: 4,
         round_effects: Vec::new(),
     });
-    let player = ctx.db.player().id().find(ctx.sender).unwrap();
     ctx.db.player().id().update(Player {
         game_id: Some(game.id),
         ..player
@@ -102,6 +110,23 @@ pub fn ready(ctx: &ReducerContext, is_ready: bool) {
 }
 
 pub fn start_game(ctx: &ReducerContext, game: Game) {
+    let start_positions = vec![
+        Position { x: 0, y: 0 },
+        Position {
+            x: game.size - 1,
+            y: game.size - 1,
+        },
+        Position {
+            x: 0,
+            y: game.size - 1,
+        },
+        Position {
+            x: game.size - 1,
+            y: 0,
+        },
+    ];
+
+    let mut k = 0;
     for player_id in &game.players {
         let player = ctx.db.player().id().find(player_id).unwrap();
         ctx.db.player().id().update(Player {
@@ -109,6 +134,22 @@ pub fn start_game(ctx: &ReducerContext, game: Game) {
             eliminated: false,
             ..player
         });
+
+        let character = ctx
+            .db
+            .character()
+            .id()
+            .find(player.character_id.unwrap())
+            .unwrap();
+
+        ctx.db.character().id().update(Character {
+            current_state: CharacterState {
+                position: start_positions[k].clone(),
+                ..character.current_state
+            },
+            ..character
+        });
+        k += 1;
     }
 
     ctx.db.game().id().update(Game {
@@ -162,8 +203,11 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
                 .get(step as usize)
                 .cloned()
                 .unwrap();
-            if let Some(action) = action {
-                effects.push(get_action_effects(character, action));
+
+            if character.current_state.hp > 0 {
+                if let Some(action) = action {
+                    effects.push(get_action_effects(character, action));
+                }
             }
         }
 
@@ -232,8 +276,13 @@ pub fn end_game(ctx: &ReducerContext, game_id: u64) {
     ctx.db.game().id().delete(&game.id);
 }
 
+#[reducer]
 pub fn quit_game(ctx: &ReducerContext) {
     let player = ctx.db.player().id().find(ctx.sender).unwrap();
+    if player.game_id.is_none() {
+        return;
+    }
+
     let game = ctx.db.game().id().find(player.game_id.unwrap()).unwrap();
     let new_players: Vec<Identity> = game
         .players
@@ -242,28 +291,30 @@ pub fn quit_game(ctx: &ReducerContext) {
         .filter(|&player_id| player_id != player.id)
         .collect();
 
-    if new_players.len() == 0 || (game.started && new_players.len() == 1) {
+    let nb_players_remaining = new_players.len();
+
+    // Update player
+    ctx.db.player().id().update(Player {
+        game_id: Option::None,
+        character_class_id: Option::None,
+        character_id: Option::None,
+        ready: false,
+        eliminated: true,
+        ..player
+    });
+
+    // Delete character
+    if let Some(character_id) = player.character_id {
+        ctx.db.character().id().delete(character_id);
+    }
+
+    // Update game
+    ctx.db.game().id().update(Game {
+        players: new_players,
+        ..game
+    });
+
+    if nb_players_remaining == 0 || (game.started && nb_players_remaining == 1) {
         end_game(ctx, game.id);
-    } else {
-        // Update game
-        ctx.db.game().id().update(Game {
-            players: new_players,
-            ..game
-        });
-
-        // Delete character
-        if let Some(character_id) = player.character_id {
-            ctx.db.character().id().delete(character_id);
-        }
-
-        // Update player
-        ctx.db.player().id().update(Player {
-            game_id: Option::None,
-            character_class_id: Option::None,
-            character_id: Option::None,
-            ready: false,
-            eliminated: false,
-            ..player
-        });
     }
 }

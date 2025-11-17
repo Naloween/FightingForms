@@ -8,6 +8,7 @@ const table_names: Array[String] = ['game']
 
 @export var id: int 
 @export var players: Array[PackedByteArray] 
+@export var size: int 
 @export var started: bool 
 @export var round: int 
 @export var ending: bool 
@@ -19,6 +20,7 @@ func _init() -> void:
 	set_meta('primary_key', 'id')
 	set_meta('bsatn_type_id', &'u64')
 	set_meta('bsatn_type_players', &'identity')
+	set_meta('bsatn_type_size', &'u8')
 	set_meta('bsatn_type_started', &'bool')
 	set_meta('bsatn_type_round', &'u8')
 	set_meta('bsatn_type_ending', &'bool')
@@ -28,16 +30,18 @@ func _init() -> void:
 
 ## 0. id: int[br]
 ## 1. players: Array of PackedByteArray[br]
-## 2. started: bool[br]
-## 3. round: int[br]
-## 4. ending: bool[br]
-## 5. creator_id: PackedByteArray[br]
-## 6. max_nb_players: int[br]
-## 7. round_effects: Array of FightingFormsAppliedEffect[br]
-static func create(p_id: int, p_players: Array[PackedByteArray], p_started: bool, p_round: int, p_ending: bool, p_creator_id: PackedByteArray, p_max_nb_players: int, p_round_effects: Array[FightingFormsAppliedEffect]) -> FightingFormsGame:
+## 2. size: int[br]
+## 3. started: bool[br]
+## 4. round: int[br]
+## 5. ending: bool[br]
+## 6. creator_id: PackedByteArray[br]
+## 7. max_nb_players: int[br]
+## 8. round_effects: Array of FightingFormsAppliedEffect[br]
+static func create(p_id: int, p_players: Array[PackedByteArray], p_size: int, p_started: bool, p_round: int, p_ending: bool, p_creator_id: PackedByteArray, p_max_nb_players: int, p_round_effects: Array[FightingFormsAppliedEffect]) -> FightingFormsGame:
 	var result = FightingFormsGame.new()
 	result.id = p_id
 	result.players = p_players
+	result.size = p_size
 	result.started = p_started
 	result.round = p_round
 	result.ending = p_ending

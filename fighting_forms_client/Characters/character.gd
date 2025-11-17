@@ -6,7 +6,7 @@ var step = -1
 var offset = 50
 var tile_size = 100
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	GlobalSignal.add_listener("new_step", _on_new_step)
 	SpacetimeDB.FightingForms.db.character.on_update(_on_character_update)
 
@@ -93,3 +93,5 @@ func _on_stunlor_mouse_exited() -> void:
 
 func _exit_tree() -> void:
 	GlobalSignal.remove_listener("new_step", _on_new_step)
+	SpacetimeDB.FightingForms.db.character.remove_on_update(_on_character_update)
+	

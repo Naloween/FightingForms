@@ -23,3 +23,7 @@ GlobalSignal="*res://global_signal.gd"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/SpacetimeDB/plugin.cfg")
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true

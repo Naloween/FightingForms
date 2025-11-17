@@ -1,20 +1,30 @@
 extends AspectRatioContainer
 class_name  Board
 
-@export var board_size = 6
+var board_size = 6
 var margin = 10
 var offset = 50 + margin
 var tile_size = 100
 
 var DAMAGE_TILE_SCENE = preload("res://Menus/Game/DamageTile.tscn")
+var BLANK_TILE_SCENE = preload("res://Menus/Game/blank_tile.tscn")
 
 var damage_tiles = []
 var characters_node: Dictionary
 
-func _ready():
+func _enter_tree():
+	var player: FightingFormsPlayer = SpacetimeDB.FightingForms.db.player.id.find(SpacetimeDB.FightingForms.get_local_identity())
+	var game: FightingFormsGame = SpacetimeDB.FightingForms.db.game.id.find(player.game_id.unwrap())
+	board_size = game.size
+	
+	$MarginContainer/GridContainer.columns = board_size
+	
 	for i in range(board_size):
 		damage_tiles.append([])
 		for j in range(board_size):
+			var blank_tile: Control = BLANK_TILE_SCENE.instantiate()
+			$MarginContainer/GridContainer.add_child(blank_tile)
+			
 			var tile: Node2D = DAMAGE_TILE_SCENE.instantiate()
 			tile.position = Vector2(offset+tile_size*j, offset+tile_size*i)
 			tile.visible = false
@@ -22,6 +32,8 @@ func _ready():
 			damage_tiles[-1].append(tile)
 	
 	SpacetimeDB.FightingForms.db.game.on_update(_on_game_update)
+	
+	_notification(NOTIFICATION_RESIZED)
 
 func _notification(what):
 	if damage_tiles.size() == 0:
@@ -63,3 +75,10 @@ func _on_game_update(old_game: FightingFormsGame, new_game: FightingFormsGame):
 
 func _exit_tree() -> void:
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
+	
+	for i in range(len(damage_tiles)):
+		for j in range(len(damage_tiles[0])):
+			damage_tiles[i][j].queue_free()
+	damage_tiles = []
+	for child in $MarginContainer/GridContainer.get_children():
+		child.queue_free()

@@ -8,9 +8,7 @@ signal game_started(int)
 @export var game_id: int = 0
 var is_ready = false
 
-var PLAYER_SELECT_SCENE = preload("res://Menus/Lobby/PlayerSelection.tscn")
-
-func _ready():
+func _enter_tree() -> void:
 	SpacetimeDB.FightingForms.db.game.on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.player.on_update(_on_player_update)
 	
@@ -33,11 +31,7 @@ func remove_players():
 
 func add_players(game: FightingFormsGame):
 	for player_id in game.players:
-		var player = SpacetimeDB.FightingForms.db.player.id.find(player_id)
-		
-		var player_selection = PLAYER_SELECT_SCENE.instantiate()
-		player_selection.init(player)
-		
+		var player_selection = PlayerSelect.create_player_select(player_id)
 		$Players.add_child(player_selection)
 
 func _on_ready_button_pressed() -> void:
@@ -50,12 +44,13 @@ func _on_ready_button_pressed() -> void:
 
 func _on_game_update(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 	if new_game.id == game_id:
-#		Start Game
-		if new_game.started:
-			game_started.emit(game_id)
 #		Change participants
 		remove_players()
 		add_players(new_game)
+		
+#		Start Game
+		if new_game.started:
+			game_started.emit(game_id)
 
 func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFormsPlayer):
 	if new_player.id == SpacetimeDB.FightingForms.get_local_identity():
@@ -75,3 +70,7 @@ func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFor
 func _exit_tree() -> void:
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.player.remove_on_update(_on_player_update)
+	
+	remove_players()
+	$ReadyButton.text = "Ready"
+	

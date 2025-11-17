@@ -15,7 +15,7 @@ var characters = Dictionary() # Store each character node for each character id
 var is_ready = false
 var step = -1
 
-func _ready():
+func _enter_tree():
 	SpacetimeDB.FightingForms.db.game.on_update(_on_game_update)
 	SpacetimeDB.FightingForms.db.game.on_delete(_on_game_delete)
 	SpacetimeDB.FightingForms.db.character.on_update(_on_character_update)
@@ -41,7 +41,7 @@ func _ready():
 		$HBoxContainer/SideMenu/SideMenuContainer/players.add_child(player_icon)
 		
 		# Add characters
-		var character_node: Node2D
+		var character_node: Character
 		var character = SpacetimeDB.FightingForms.db.character.id.find(player.character_id.unwrap())
 		var character_class = SpacetimeDB.FightingForms.db.character_class.id.find(character.character_class_id)
 		
@@ -128,7 +128,6 @@ func _on_game_delete(game: FightingFormsGame):
 	else:
 		win.emit()
 
-
 func _on_character_update(prev_character: FightingFormsCharacter, new_character: FightingFormsCharacter):
 	if new_character.player_id == SpacetimeDB.FightingForms.get_local_identity():
 		update_actions(new_character)
@@ -141,12 +140,16 @@ func _on_player_update(prev_player: FightingFormsPlayer, new_player: FightingFor
 		else:
 			$HBoxContainer/SideMenu/SideMenuContainer/ReadyButton.text = "Ready"
 
-func _on_button_pressed() -> void:
-	SpacetimeDB.FightingForms.reducers.ready(!is_ready)
 
 func _on_h_scroll_bar_scrolling() -> void:
 	var _step = $HBoxContainer/SideMenu/SideMenuContainer/HScrollBar.value
 	update_step(_step)
+
+func _on_quit_button_pressed() -> void:
+	SpacetimeDB.FightingForms.reducers.quit_game()
+
+func _on_ready_button_pressed() -> void:
+	SpacetimeDB.FightingForms.reducers.ready(!is_ready)
 
 func _exit_tree() -> void:
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_game_update)
@@ -159,6 +162,12 @@ func _exit_tree() -> void:
 #	Remove player nodes
 	for child in $HBoxContainer/SideMenu/SideMenuContainer/players.get_children():
 		child.queue_free()
+		
 #	Remove characters
 	for character_node in characters.values():
 		character_node.queue_free()
+	characters.clear()
+		
+#		Remove Action
+	for child in $HBoxContainer/SideMenu/SideMenuContainer/ChooseActions.get_children():
+		child.queue_free()

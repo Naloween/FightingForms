@@ -30,12 +30,38 @@ pub enum Direction {
     NorthWest,
 }
 
+impl Direction {
+    pub fn to_delta(&self) -> (i8, i8) {
+        match self {
+            Direction::North => (0, -1),
+            Direction::NorthEast => (1, -1),
+            Direction::East => (1, 0),
+            Direction::SouthEast => (1, 1),
+            Direction::South => (0, 1),
+            Direction::SouthWest => (-1, 1),
+            Direction::West => (-1, 0),
+            Direction::NorthWest => (-1, -1),
+        }
+    }
+}
+
 #[derive(SpacetimeType, PartialEq, Eq, Clone)]
 pub enum CardinalDirection {
     North,
     East,
     South,
     West,
+}
+
+impl CardinalDirection {
+    pub fn to_delta(&self) -> (i8, i8) {
+        match self {
+            CardinalDirection::North => (0, -1),
+            CardinalDirection::East => (1, 0),
+            CardinalDirection::South => (0, 1),
+            CardinalDirection::West => (-1, 0),
+        }
+    }
 }
 
 #[reducer(init)]
@@ -214,8 +240,6 @@ pub fn identity_connected(ctx: &ReducerContext) {
 #[reducer(client_disconnected)]
 pub fn identity_disconnected(ctx: &ReducerContext) {
     let player = ctx.db.player().id().find(&ctx.sender).unwrap();
-    if player.game_id.is_some() {
-        quit_game(ctx);
-    }
+    quit_game(ctx);
     ctx.db.player().id().delete(player.id);
 }

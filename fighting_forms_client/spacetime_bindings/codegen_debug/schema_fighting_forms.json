@@ -425,6 +425,10 @@
 					"type": "__identity__"
 				},
 				{
+					"name": "size",
+					"type": "U8"
+				},
+				{
 					"name": "started",
 					"type": "Bool"
 				},
@@ -685,6 +689,10 @@
 		},
 		{
 			"name": "create_game",
+			"params": []
+		},
+		{
+			"name": "quit_game",
 			"params": []
 		},
 		{
@@ -1701,6 +1709,14 @@
 									]
 								}
 							}
+						}
+					},
+					{
+						"name": {
+							"some": "size"
+						},
+						"algebraic_type": {
+							"U8": []
 						}
 					},
 					{

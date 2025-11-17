@@ -46,7 +46,9 @@ func _ready():
 	loose_node.restart.connect(_on_loose_restart)
 
 func _on_spacetimedb_connected(identity: PackedByteArray, token: String):
-	print("Game: Connected to SpacetimeDB!")
+	$Loading.queue_free()
+	
+	print("Connected to SpacetimeDB!")
 	# Good place to subscribe to initial data
 	var queries = [
 		"SELECT * FROM player",

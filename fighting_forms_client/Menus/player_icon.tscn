@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://ckky4ic57lotc"]
+[gd_scene load_steps=8 format=3 uid="uid://ckky4ic57lotc"]
 
+[ext_resource type="Theme" uid="uid://dfs3negd4od71" path="res://assets/main_theme.tres" id="1_coilf"]
 [ext_resource type="Script" uid="uid://d8nu2pysluaq" path="res://Menus/player_icon.gd" id="1_mh5xa"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scbib"]
@@ -36,6 +37,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 124.0
 offset_bottom = 117.0
+theme = ExtResource("1_coilf")
 script = ExtResource("1_mh5xa")
 
 [node name="Border" type="Panel" parent="."]
@@ -71,17 +73,20 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_to723")
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
 offset_left = 3.0
-offset_top = 95.0
+offset_top = 101.0
 offset_right = 103.0
 offset_bottom = 118.0
 text = "Player Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
 
 [node name="Ready" type="Label" parent="."]
 layout_mode = 0
 offset_left = 110.0
-offset_top = 96.0
+offset_top = 99.0
 offset_right = 123.0
-offset_bottom = 119.0
+offset_bottom = 122.0
 theme_override_colors/font_color = Color(0.624121, 0.16621858, 0.14492482, 1)
 text = "❌"
-horizontal_alignment = 2
+vertical_alignment = 1

@@ -11,8 +11,24 @@ theme_override_styles/panel = ExtResource("1_ymonv")
 script = ExtResource("2_v4l38")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(49, 49)
-scale = Vector2(0.57228917, 0.57228917)
+position = Vector2(48.625, 44.707832)
+scale = Vector2(0.51506025, 0.51506025)
 texture = ExtResource("3_codnb")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_top = -23.0
+offset_right = 31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Stunlor"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

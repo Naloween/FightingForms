@@ -1,11 +1,6 @@
-[gd_resource type="Theme" load_steps=3 format=3 uid="uid://dfs3negd4od71"]
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dfs3negd4od71"]
 
 [ext_resource type="FontFile" uid="uid://c26me426vt05k" path="res://assets/fonts/vector_waves/Vector Waves.otf" id="1_xgdp2"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64js0"]
-bg_color = Color(0, 0, 0, 0.49019608)
-
 [resource]
 default_font = ExtResource("1_xgdp2")
-Panel/colors/blue1 = Color(0.07787628, 0.5937973, 0.6719781, 1)
-Panel/styles/panel = SubResource("StyleBoxFlat_64js0")

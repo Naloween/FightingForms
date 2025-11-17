@@ -6,7 +6,7 @@ var step = -1
 @export var type: FightingFormsModuleClient.Types.JaugeType
 var player_id: PackedByteArray
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	SpacetimeDB.FightingForms.db.character.on_update(_on_character_update)
 	GlobalSignal.add_listener("new_step", _on_new_step)
 

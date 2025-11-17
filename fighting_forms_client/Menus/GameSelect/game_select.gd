@@ -5,7 +5,7 @@ signal enter_lobby(game_id: int)
 
 var GAME_BUTTON_SCENE = preload("res://Menus/GameSelect/GameButton.tscn")
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	for game in SpacetimeDB.FightingForms.db.game.iter():
 		_on_insert_game(game)
 		
@@ -39,7 +39,8 @@ func _on_delete_game(deleted_game: FightingFormsGame):
 			node.queue_free()
 	
 func _exit_tree() -> void:
+	for node in $Games.get_children():
+		node.queue_free()
 	SpacetimeDB.FightingForms.db.game.remove_on_insert(_on_insert_game)
 	SpacetimeDB.FightingForms.db.game.remove_on_update(_on_update_game)
 	SpacetimeDB.FightingForms.db.game.remove_on_delete(_on_delete_game)
-	

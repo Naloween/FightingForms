@@ -23,6 +23,14 @@ func create_game(cb: Callable = func(_t: TransactionUpdateMessage): pass) -> Err
 	cb.call(__result__)
 	return OK
 
+
+func quit_game(cb: Callable = func(_t: TransactionUpdateMessage): pass) -> Error:
+	var __handle__ := _client.call_reducer('quit_game', [], [])
+	if __handle__.error: return __handle__.error
+	var __result__ = await __handle__.wait_for_response()
+	cb.call(__result__)
+	return OK
+
 ## 0. is_ready: bool [br]
 func ready(is_ready: bool, cb: Callable = func(_t: TransactionUpdateMessage): pass) -> Error:
 	var __handle__ := _client.call_reducer('ready', [is_ready], [&'bool'])

@@ -54,13 +54,24 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="HBoxContainer/Board"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Board"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer/Board/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 text = "Game"
 label_settings = SubResource("LabelSettings_i6cgr")
 horizontal_alignment = 1
+
+[node name="QuitButton" type="Button" parent="HBoxContainer/Board/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Quit"
 
 [node name="Board" parent="HBoxContainer/Board" instance=ExtResource("3_ne7kq")]
 layout_mode = 2
@@ -100,9 +111,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ReadyButton" type="Button" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+custom_minimum_size = Vector2(120, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("4_ne7kq")
+theme_override_font_sizes/font_size = 32
 text = "Ready"
 
 [node name="HP_Bar" parent="HBoxContainer/SideMenu/SideMenuContainer" instance=ExtResource("4_3clua")]
@@ -120,11 +133,14 @@ type = 2
 layout_mode = 2
 
 [node name="HScrollBar" type="HScrollBar" parent="HBoxContainer/SideMenu/SideMenuContainer"]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-max_value = 4.0
+theme = ExtResource("4_ne7kq")
+max_value = 4.5
 step = 1.0
+page = 0.5
 value = 4.0
 rounded = true
 
@@ -150,5 +166,6 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 
-[connection signal="pressed" from="HBoxContainer/SideMenu/SideMenuContainer/ReadyButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Board/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/SideMenu/SideMenuContainer/ReadyButton" to="." method="_on_ready_button_pressed"]
 [connection signal="scrolling" from="HBoxContainer/SideMenu/SideMenuContainer/HScrollBar" to="." method="_on_h_scroll_bar_scrolling"]
