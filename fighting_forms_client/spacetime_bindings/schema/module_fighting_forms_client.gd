@@ -23,16 +23,22 @@ const Stunlor2Action = Types.Stunlor2Action
 const Stunlor3Action = Types.Stunlor3Action
 const CharacterState = Types.CharacterState
 const Position = Types.Position
+const Status = Types.Status
+const StunnedConfig = Types.StunnedConfig
+const DamageReductionConfig = Types.DamageReductionConfig
+const RefundOnDamageConfig = Types.RefundOnDamageConfig
+const JaugeType = Types.JaugeType
 const CharacterClass = Types.CharacterClass
 const Game = Types.Game
 const AppliedEffect = Types.AppliedEffect
 const Effect = Types.Effect
 const CostConfig = Types.CostConfig
-const JaugeType = Types.JaugeType
 const RestoreConfig = Types.RestoreConfig
 const MoveConfig = Types.MoveConfig
 const TeleportConfig = Types.TeleportConfig
 const DamageTileConfig = Types.DamageTileConfig
+const StatusTileConfig = Types.StatusTileConfig
+const ApplyStatusConfig = Types.ApplyStatusConfig
 const Player = Types.Player
 
 var reducers: FightingFormsModuleReducers

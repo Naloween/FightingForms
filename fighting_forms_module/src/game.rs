@@ -18,6 +18,7 @@ pub struct Game {
     pub size: u8,
     pub started: bool,
     pub round: u8,
+    pub step: u8,
     pub ending: bool,
     pub creator_id: Identity,
     pub max_nb_players: u8,
@@ -58,6 +59,7 @@ pub fn create_game(ctx: &ReducerContext) {
         size: 10,
         started: false,
         round: 0,
+        step: 0,
         ending: false,
         creator_id: ctx.sender,
         max_nb_players: 4,
@@ -188,6 +190,8 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
     for step in 0..NB_STEPS {
         update_character_step_state(ctx, step as usize);
 
+        let game = ctx.db.game().id().find(game.id).unwrap();
+
         // Generate effects from actions
         let mut effects: Vec<Vec<Effect>> = Vec::new();
         for player_id in &game.players {
@@ -198,6 +202,15 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
                 .id()
                 .find(player.character_id.unwrap())
                 .unwrap();
+
+            for status in character.current_state.status.iter() {
+                match status {
+                    Status::Stunned(_stunned_config) => {
+                        continue;
+                    }
+                    _ => {}
+                }
+            }
             let action = character
                 .choosen_actions
                 .get(step as usize)
@@ -206,7 +219,7 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
 
             if character.current_state.hp > 0 {
                 if let Some(action) = action {
-                    effects.push(get_action_effects(character, action));
+                    effects.push(get_action_effects(&game, character, action));
                 }
             }
         }
@@ -216,6 +229,48 @@ pub fn next_round(ctx: &ReducerContext, game: Game) {
             let mut applied_effects = apply_effect_chain(ctx, effect_chain, step + 1);
             round_effects.append(&mut applied_effects);
         }
+
+        // Reduce duration of statuses
+        for character in ctx.db.character().iter() {
+            let mut new_statuses: Vec<Status> = Vec::new();
+            for status in &character.current_state.status {
+                match status {
+                    Status::Stunned(stunned_config) => {
+                        if stunned_config.duration > 0 {
+                            new_statuses.push(Status::Stunned(StunnedConfig {
+                                duration: stunned_config.duration - 1,
+                            }));
+                        }
+                    }
+                    Status::DamageReduction(damage_reduction_config) => {
+                        if damage_reduction_config.duration > 0 {
+                            new_statuses.push(Status::DamageReduction(DamageReductionConfig {
+                                duration: damage_reduction_config.duration - 1,
+                                ..damage_reduction_config.clone()
+                            }));
+                        }
+                    }
+                    Status::RefundOnDamage(refund_on_damage_config) => {
+                        if refund_on_damage_config.duration > 0 {
+                            new_statuses.push(Status::RefundOnDamage(RefundOnDamageConfig {
+                                duration: refund_on_damage_config.duration - 1,
+                                ..refund_on_damage_config.clone()
+                            }));
+                        }
+                    }
+                }
+            }
+            ctx.db.character().id().update(Character {
+                current_state: CharacterState {
+                    status: new_statuses,
+                    ..character.current_state.clone()
+                },
+                ..character
+            });
+        }
+
+        // Update Game
+        ctx.db.game().id().update(Game { step, ..game });
     }
 
     for player_id in &game.players {

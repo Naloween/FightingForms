@@ -1,6 +1,4 @@
-use spacetimedb::{
-    rand::seq::index, reducer, table, Identity, ReducerContext, SpacetimeType, Table,
-};
+use spacetimedb::{reducer, table, Identity, ReducerContext, SpacetimeType, Table};
 
 use crate::{
     action::*,
@@ -31,6 +29,7 @@ pub struct CharacterState {
     pub max_hp: u8,
     pub max_mana: u8,
     pub max_stamina: u8,
+    pub status: Vec<Status>,
 }
 
 #[table(name = character, public)]
@@ -47,11 +46,38 @@ pub struct Character {
     pub states: Vec<CharacterState>,
 }
 
-#[derive(SpacetimeType, Clone, PartialEq, Eq)]
+#[derive(SpacetimeType, Clone, Copy, PartialEq, Eq)]
 pub enum JaugeType {
     HP,
     Mana,
     Stamina,
+}
+
+#[derive(SpacetimeType, Clone, Copy)]
+pub enum Status {
+    Stunned(StunnedConfig),
+    DamageReduction(DamageReductionConfig),
+    RefundOnDamage(RefundOnDamageConfig),
+}
+
+#[derive(SpacetimeType, Clone, Copy)]
+pub struct StunnedConfig {
+    pub duration: u8,
+}
+
+#[derive(SpacetimeType, Clone, Copy)]
+pub struct DamageReductionConfig {
+    pub amount: u8,
+    pub duration: u8,
+    pub only_once: bool,
+}
+
+#[derive(SpacetimeType, Clone, Copy)]
+pub struct RefundOnDamageConfig {
+    pub jauge_type: JaugeType,
+    pub only_once: bool,
+    pub amount: u8,
+    pub duration: u8,
 }
 
 #[reducer]
@@ -75,6 +101,7 @@ pub fn select_character_class(ctx: &ReducerContext, character_class_id: u16) {
                     max_mana: character_class.mana,
                     max_hp: character_class.hp,
                     max_stamina: character_class.stamina,
+                    status: Vec::new(),
                 };
 
                 let character = ctx.db.character().insert(Character {

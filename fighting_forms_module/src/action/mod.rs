@@ -3,8 +3,13 @@ pub mod effect;
 use spacetimedb::{table, SpacetimeType};
 
 use crate::{
-    action::effect::{CostConfig, DamageTileConfig, Effect, MoveConfig},
-    character::{Character, JaugeType},
+    action::effect::{
+        ApplyStatusConfig, CostConfig, DamageTileConfig, Effect, MoveConfig, StatusTileConfig,
+    },
+    character::{
+        Character, DamageReductionConfig, JaugeType, RefundOnDamageConfig, Status, StunnedConfig,
+    },
+    game::{Game, NB_STEPS},
     CardinalDirection, Direction, Position,
 };
 #[table(name=action_class_config, public)]
@@ -95,8 +100,9 @@ pub struct Stunlor3Action {
 }
 
 // TODO
-pub fn get_action_effects(character: Character, action: Action) -> Vec<Effect> {
+pub fn get_action_effects(game: &Game, character: Character, action: Action) -> Vec<Effect> {
     let character_id = character.id;
+    let step = game.step;
     match action {
         Action::Move(move_action) => {
             vec![
@@ -148,16 +154,7 @@ pub fn get_action_effects(character: Character, action: Action) -> Vec<Effect> {
             }),
         ],
         Action::Zytex2(zytex2_action) => {
-            let (delta_x, delta_y, range) = match zytex2_action.direction {
-                Direction::North => (0, -1, 4),
-                Direction::NorthEast => (1, -1, 3),
-                Direction::East => (1, 0, 4),
-                Direction::SouthEast => (1, 1, 3),
-                Direction::South => (0, 1, 4),
-                Direction::SouthWest => (-1, 1, 3),
-                Direction::West => (-1, 0, 4),
-                Direction::NorthWest => (-1, -1, 3),
-            };
+            let (delta_x, delta_y) = zytex2_action.direction.to_delta();
 
             let mut effects = vec![Effect::Cost(CostConfig {
                 character_id,
@@ -167,17 +164,18 @@ pub fn get_action_effects(character: Character, action: Action) -> Vec<Effect> {
             for k in 1..4 {
                 effects.push(Effect::DamageTile(DamageTileConfig {
                     position: crate::Position {
-                        x: (character.current_state.position.x as i32 + k * delta_x) as u8,
-                        y: (character.current_state.position.y as i32 + k * delta_y) as u8,
+                        x: (character.current_state.position.x as i8 + k * delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + k * delta_y) as u8,
                     },
                     amount: 1,
                 }));
             }
-            if range == 4 {
+            // straight line
+            if delta_x * delta_y == 0 {
                 effects.push(Effect::DamageTile(DamageTileConfig {
                     position: crate::Position {
-                        x: (character.current_state.position.x as i32 + 4 * delta_x) as u8,
-                        y: (character.current_state.position.y as i32 + 4 * delta_y) as u8,
+                        x: (character.current_state.position.x as i8 + 4 * delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + 4 * delta_y) as u8,
                     },
                     amount: 2,
                 }));
@@ -185,16 +183,7 @@ pub fn get_action_effects(character: Character, action: Action) -> Vec<Effect> {
             effects
         }
         Action::Zytex3(zytex3_action) => {
-            let (delta_x, delta_y) = match zytex3_action.direction {
-                Direction::North => (0, -1),
-                Direction::NorthEast => (1, -1),
-                Direction::East => (1, 0),
-                Direction::SouthEast => (1, 1),
-                Direction::South => (0, 1),
-                Direction::SouthWest => (-1, 1),
-                Direction::West => (-1, 0),
-                Direction::NorthWest => (-1, -1),
-            };
+            let (delta_x, delta_y) = zytex3_action.direction.to_delta();
             vec![
                 Effect::Cost(CostConfig {
                     character_id,
@@ -213,18 +202,264 @@ pub fn get_action_effects(character: Character, action: Action) -> Vec<Effect> {
                 }),
                 Effect::DamageTile(DamageTileConfig {
                     position: Position {
-                        x: (character.current_state.position.x as i32 + delta_x) as u8,
-                        y: (character.current_state.position.y as i32 + delta_y) as u8,
+                        x: (character.current_state.position.x as i8 + delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + delta_y) as u8,
                     },
                     amount: 1,
                 }),
             ]
         }
-        Action::Bardass1(bardass1_action) => vec![],
-        Action::Bardass2(bardass2_action) => vec![],
-        Action::Bardass3(bardass3_action) => vec![],
-        Action::Stunlor1(stunlor1_action) => vec![],
-        Action::Stunlor2(stunlor2_action) => vec![],
-        Action::Stunlor3(stunlor3_action) => vec![],
+        Action::Bardass1(_bardass1_action) => vec![
+            Effect::Cost(CostConfig {
+                character_id,
+                jauge_type: JaugeType::Mana,
+                amount: 1,
+            }),
+            Effect::DamageTile(DamageTileConfig {
+                position: Position {
+                    x: character.current_state.position.x - 1,
+                    y: character.current_state.position.y - 1,
+                },
+                amount: 1,
+            }),
+            Effect::DamageTile(DamageTileConfig {
+                position: Position {
+                    x: character.current_state.position.x + 1,
+                    y: character.current_state.position.y - 1,
+                },
+                amount: 1,
+            }),
+            Effect::DamageTile(DamageTileConfig {
+                position: Position {
+                    x: character.current_state.position.x + 1,
+                    y: character.current_state.position.y + 1,
+                },
+                amount: 1,
+            }),
+            Effect::DamageTile(DamageTileConfig {
+                position: Position {
+                    x: character.current_state.position.x - 1,
+                    y: character.current_state.position.y + 1,
+                },
+                amount: 1,
+            }),
+        ],
+        Action::Bardass2(bardass2_action) => {
+            let (delta_x, delta_y) = bardass2_action.direction.to_delta();
+            let (delta_x_left, delta_y_left) = bardass2_action.direction.rotate(1).to_delta();
+            let (delta_x_right, delta_y_right) = bardass2_action.direction.rotate(-1).to_delta();
+            vec![
+                Effect::Cost(CostConfig {
+                    character_id,
+                    jauge_type: JaugeType::Mana,
+                    amount: 2,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: (character.current_state.position.x as i8 + 1 * delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + 1 * delta_y) as u8,
+                    },
+                    amount: 2,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: (character.current_state.position.x as i8 + 2 * delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + 2 * delta_y) as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: (character.current_state.position.x as i8 + 3 * delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + 3 * delta_y) as u8,
+                    },
+                    amount: 2,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: (character.current_state.position.x as i8
+                            + 2 * delta_x
+                            + 1 * delta_x_left) as u8,
+                        y: (character.current_state.position.y as i8
+                            + 2 * delta_y
+                            + 1 * delta_y_left) as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: (character.current_state.position.x as i8
+                            + 2 * delta_x
+                            + 1 * delta_x_right) as u8,
+                        y: (character.current_state.position.y as i8
+                            + 2 * delta_y
+                            + 1 * delta_y_right) as u8,
+                    },
+                    amount: 1,
+                }),
+            ]
+        }
+        Action::Bardass3(_bardass3_action) => vec![
+            Effect::Cost(CostConfig {
+                character_id,
+                jauge_type: JaugeType::Mana,
+                amount: 4,
+            }),
+            Effect::ApplyStatus(ApplyStatusConfig {
+                character_id,
+                status: Status::DamageReduction(DamageReductionConfig {
+                    amount: 1,
+                    duration: NB_STEPS - step,
+                    only_once: false,
+                }),
+            }),
+            Effect::ApplyStatus(ApplyStatusConfig {
+                character_id,
+                status: Status::RefundOnDamage(RefundOnDamageConfig {
+                    jauge_type: JaugeType::Mana,
+                    only_once: true,
+                    amount: 1,
+                    duration: NB_STEPS - step,
+                }),
+            }),
+        ],
+        Action::Stunlor1(stunlor1_action) => {
+            let (delta_x, delta_y) = stunlor1_action.direction.to_delta();
+            vec![
+                Effect::Cost(CostConfig {
+                    character_id,
+                    jauge_type: JaugeType::Mana,
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: (character.current_state.position.x as i8 + delta_x) as u8,
+                        y: (character.current_state.position.y as i8 + delta_y) as u8,
+                    },
+                    amount: 3,
+                }),
+            ]
+        }
+        // Missing few effects for shield, removing passives and immunity
+        Action::Stunlor2(stunlor2_action) => {
+            let (delta_x, delta_y) = stunlor2_action.direction.to_delta();
+            let (delta_x_left, delta_y_left) = stunlor2_action.direction.rotate(1).to_delta();
+            let (delta_x_right, delta_y_right) = stunlor2_action.direction.rotate(-1).to_delta();
+            vec![
+                Effect::Cost(CostConfig {
+                    character_id,
+                    jauge_type: JaugeType::Mana,
+                    amount: 3,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x + 4 * delta_x as u8,
+                        y: character.current_state.position.y + 4 * delta_y as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x
+                            + 3 * delta_x as u8
+                            + 1 * delta_x_left as u8,
+                        y: character.current_state.position.y
+                            + 3 * delta_y as u8
+                            + 1 * delta_y_left as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x
+                            + 3 * delta_x as u8
+                            + 1 * delta_x_right as u8,
+                        y: character.current_state.position.y
+                            + 3 * delta_y as u8
+                            + 1 * delta_y_right as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::StatusTile(StatusTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x + 3 * delta_x as u8,
+                        y: character.current_state.position.y + 3 * delta_y as u8,
+                    },
+                    status: Status::Stunned(StunnedConfig {
+                        duration: 2 * NB_STEPS,
+                    }),
+                }),
+            ]
+        }
+        Action::Stunlor3(stunlor3_action) => {
+            let (delta_x, delta_y) = stunlor3_action.direction.to_delta();
+            let (delta_x_left, delta_y_left) = stunlor3_action.direction.rotate(1).to_delta();
+            let (delta_x_right, delta_y_right) = stunlor3_action.direction.rotate(-1).to_delta();
+            vec![
+                Effect::Cost(CostConfig {
+                    character_id,
+                    jauge_type: JaugeType::Mana,
+                    amount: 2,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x + 1 * delta_x as u8,
+                        y: character.current_state.position.y + 1 * delta_y as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x + 2 * delta_x as u8,
+                        y: character.current_state.position.y + 2 * delta_y as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x
+                            + 1 * delta_x as u8
+                            + 1 * delta_x_left as u8,
+                        y: character.current_state.position.y
+                            + 1 * delta_y as u8
+                            + 1 * delta_y_left as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x
+                            + 2 * delta_x as u8
+                            + 1 * delta_x_left as u8,
+                        y: character.current_state.position.y
+                            + 2 * delta_y as u8
+                            + 1 * delta_y_left as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x
+                            + 1 * delta_x as u8
+                            + 1 * delta_x_right as u8,
+                        y: character.current_state.position.y
+                            + 1 * delta_y as u8
+                            + 1 * delta_y_right as u8,
+                    },
+                    amount: 1,
+                }),
+                Effect::DamageTile(DamageTileConfig {
+                    position: Position {
+                        x: character.current_state.position.x
+                            + 2 * delta_x as u8
+                            + 1 * delta_x_right as u8,
+                        y: character.current_state.position.y
+                            + 2 * delta_y as u8
+                            + 1 * delta_y_right as u8,
+                    },
+                    amount: 1,
+                }),
+            ]
+        }
     }
 }

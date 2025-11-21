@@ -48,7 +48,7 @@ func _enter_tree():
 		character_node = CHARACTER_SCENE.instantiate()
 		character_node.init(character.id)
 		
-		$HBoxContainer/Board/Board/MarginContainer.add_child(character_node)
+		$HBoxContainer/Board/Board/MarginContainer/Characters.add_child(character_node)
 		character_node.set_node_position(character.current_state.position.x, character.current_state.position.y)
 		characters.set(character.id, character_node)
 	
@@ -99,6 +99,9 @@ func _on_game_update(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 	for applied_effect in new_game.round_effects:
 		if !applied_effect.applied:
 			continue
+		if applied_effect.step-1 != step:
+			update_step(applied_effect.step-1)
+			
 		if applied_effect.effect.value == FightingFormsEffect.Cost:
 			var cost_config = applied_effect.effect.get_cost()
 			var node = CostEffect.create_cost_effect(cost_config.amount, cost_config.jauge_type)
@@ -116,6 +119,11 @@ func _on_game_update(prev_game: FightingFormsGame, new_game: FightingFormsGame):
 			var damage_tile_config = applied_effect.effect.get_damage_tile()
 			var node = DamageTileEffect.create_damage_tile_effect($HBoxContainer/Board/Board, Vector2i(damage_tile_config.position.x, damage_tile_config.position.y),
 				damage_tile_config.amount)
+			add_child(node)
+			await node.finished
+		elif applied_effect.effect.value == FightingFormsEffect.StatusTile:
+			var status_tile_config = applied_effect.effect.get_status_tile()
+			var node = EffectTileEffect.create_effect_tile_effect($HBoxContainer/Board/Board, Vector2i(status_tile_config.position.x, status_tile_config.position.y))
 			add_child(node)
 			await node.finished
 	

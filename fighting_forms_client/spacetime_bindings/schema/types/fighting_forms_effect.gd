@@ -8,10 +8,12 @@ enum {
 	Move,
 	Teleport,
 	DamageTile,
+	StatusTile,
+	ApplyStatus,
 }
 
 func _init():
-	set_meta('enum_options', [&'FightingFormsCostConfig', &'FightingFormsRestoreConfig', &'FightingFormsMoveConfig', &'FightingFormsTeleportConfig', &'FightingFormsDamageTileConfig'])
+	set_meta('enum_options', [&'FightingFormsCostConfig', &'FightingFormsRestoreConfig', &'FightingFormsMoveConfig', &'FightingFormsTeleportConfig', &'FightingFormsDamageTileConfig', &'FightingFormsStatusTileConfig', &'FightingFormsApplyStatusConfig'])
 	set_meta('bsatn_enum_type', &'FightingFormsEffect')
 
 static func parse_enum_name(i: int) -> String:
@@ -21,6 +23,8 @@ static func parse_enum_name(i: int) -> String:
 		2: return &'Move'
 		3: return &'Teleport'
 		4: return &'DamageTile'
+		5: return &'StatusTile'
+		6: return &'ApplyStatus'
 		_:
 			printerr("Enum does not have value for %d. This is out of bounds." % i)
 			return &'Unknown'
@@ -38,6 +42,12 @@ func get_teleport() -> FightingFormsTeleportConfig:
 	return data
 
 func get_damage_tile() -> FightingFormsDamageTileConfig:
+	return data
+
+func get_status_tile() -> FightingFormsStatusTileConfig:
+	return data
+
+func get_apply_status() -> FightingFormsApplyStatusConfig:
 	return data
 
 static func create(p_type: int, p_data: Variant = null) -> FightingFormsEffect:
@@ -60,3 +70,9 @@ static func create_teleport(_data: FightingFormsTeleportConfig) -> FightingForms
 
 static func create_damage_tile(_data: FightingFormsDamageTileConfig) -> FightingFormsEffect:
 	return create(DamageTile, _data)
+
+static func create_status_tile(_data: FightingFormsStatusTileConfig) -> FightingFormsEffect:
+	return create(StatusTile, _data)
+
+static func create_apply_status(_data: FightingFormsApplyStatusConfig) -> FightingFormsEffect:
+	return create(ApplyStatus, _data)

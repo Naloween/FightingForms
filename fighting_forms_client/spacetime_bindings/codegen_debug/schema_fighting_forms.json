@@ -346,6 +346,15 @@
 				{
 					"name": "max_stamina",
 					"type": "U8"
+				},
+				{
+					"name": "status",
+					"nested_type": [
+						"Array"
+					],
+					"is_array": true,
+					"type": "Status",
+					"type_idx": 18
 				}
 			]
 		},
@@ -359,6 +368,87 @@
 				{
 					"name": "y",
 					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"is_sum_type": true,
+			"enum": [
+				{
+					"name": "Stunned",
+					"type": "StunnedConfig"
+				},
+				{
+					"name": "DamageReduction",
+					"type": "DamageReductionConfig"
+				},
+				{
+					"name": "RefundOnDamage",
+					"type": "RefundOnDamageConfig"
+				}
+			]
+		},
+		{
+			"name": "StunnedConfig",
+			"struct": [
+				{
+					"name": "duration",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "DamageReductionConfig",
+			"struct": [
+				{
+					"name": "amount",
+					"type": "U8"
+				},
+				{
+					"name": "duration",
+					"type": "U8"
+				},
+				{
+					"name": "only_once",
+					"type": "Bool"
+				}
+			]
+		},
+		{
+			"name": "RefundOnDamageConfig",
+			"struct": [
+				{
+					"name": "jauge_type",
+					"type": "JaugeType",
+					"type_idx": 22
+				},
+				{
+					"name": "only_once",
+					"type": "Bool"
+				},
+				{
+					"name": "amount",
+					"type": "U8"
+				},
+				{
+					"name": "duration",
+					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "JaugeType",
+			"is_sum_type": false,
+			"enum": [
+				{
+					"name": "HP"
+				},
+				{
+					"name": "Mana"
+				},
+				{
+					"name": "Stamina"
 				}
 			]
 		},
@@ -437,6 +527,10 @@
 					"type": "U8"
 				},
 				{
+					"name": "step",
+					"type": "U8"
+				},
+				{
 					"name": "ending",
 					"type": "Bool"
 				},
@@ -455,7 +549,7 @@
 					],
 					"is_array": true,
 					"type": "AppliedEffect",
-					"type_idx": 20
+					"type_idx": 25
 				}
 			],
 			"table_names": [
@@ -474,7 +568,7 @@
 				{
 					"name": "effect",
 					"type": "Effect",
-					"type_idx": 21
+					"type_idx": 26
 				},
 				{
 					"name": "applied",
@@ -509,6 +603,14 @@
 				{
 					"name": "DamageTile",
 					"type": "DamageTileConfig"
+				},
+				{
+					"name": "StatusTile",
+					"type": "StatusTileConfig"
+				},
+				{
+					"name": "ApplyStatus",
+					"type": "ApplyStatusConfig"
 				}
 			]
 		},
@@ -522,26 +624,11 @@
 				{
 					"name": "jauge_type",
 					"type": "JaugeType",
-					"type_idx": 23
+					"type_idx": 22
 				},
 				{
 					"name": "amount",
 					"type": "U8"
-				}
-			]
-		},
-		{
-			"name": "JaugeType",
-			"is_sum_type": false,
-			"enum": [
-				{
-					"name": "HP"
-				},
-				{
-					"name": "Mana"
-				},
-				{
-					"name": "Stamina"
 				}
 			]
 		},
@@ -555,7 +642,7 @@
 				{
 					"name": "jauge_type",
 					"type": "JaugeType",
-					"type_idx": 23
+					"type_idx": 22
 				},
 				{
 					"name": "amount",
@@ -606,6 +693,35 @@
 				{
 					"name": "amount",
 					"type": "U8"
+				}
+			]
+		},
+		{
+			"name": "StatusTileConfig",
+			"struct": [
+				{
+					"name": "position",
+					"type": "Position",
+					"type_idx": 17
+				},
+				{
+					"name": "status",
+					"type": "Status",
+					"type_idx": 18
+				}
+			]
+		},
+		{
+			"name": "ApplyStatusConfig",
+			"struct": [
+				{
+					"name": "character_id",
+					"type": "U64"
+				},
+				{
+					"name": "status",
+					"type": "Status",
+					"type_idx": 18
 				}
 			]
 		},
@@ -769,7 +885,7 @@
 		},
 		{
 			"name": "character_class",
-			"type_idx": 18,
+			"type_idx": 23,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -783,7 +899,7 @@
 		},
 		{
 			"name": "game",
-			"type_idx": 19,
+			"type_idx": 24,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -797,7 +913,7 @@
 		},
 		{
 			"name": "player",
-			"type_idx": 28,
+			"type_idx": 34,
 			"primary_key": 0,
 			"primary_key_name": "id",
 			"unique_indexes": [
@@ -856,16 +972,22 @@
 		"Stunlor3Action": "FightingFormsStunlor3Action",
 		"CharacterState": "FightingFormsCharacterState",
 		"Position": "FightingFormsPosition",
+		"Status": "FightingFormsStatus",
+		"StunnedConfig": "FightingFormsStunnedConfig",
+		"DamageReductionConfig": "FightingFormsDamageReductionConfig",
+		"RefundOnDamageConfig": "FightingFormsRefundOnDamageConfig",
+		"JaugeType": "FightingFormsModuleClient.Types.JaugeType",
 		"CharacterClass": "FightingFormsCharacterClass",
 		"Game": "FightingFormsGame",
 		"AppliedEffect": "FightingFormsAppliedEffect",
 		"Effect": "FightingFormsEffect",
 		"CostConfig": "FightingFormsCostConfig",
-		"JaugeType": "FightingFormsModuleClient.Types.JaugeType",
 		"RestoreConfig": "FightingFormsRestoreConfig",
 		"MoveConfig": "FightingFormsMoveConfig",
 		"TeleportConfig": "FightingFormsTeleportConfig",
 		"DamageTileConfig": "FightingFormsDamageTileConfig",
+		"StatusTileConfig": "FightingFormsStatusTileConfig",
+		"ApplyStatusConfig": "FightingFormsApplyStatusConfig",
 		"Player": "FightingFormsPlayer"
 	},
 	"meta_type_map": {
@@ -913,16 +1035,22 @@
 		"Stunlor3Action": "FightingFormsStunlor3Action",
 		"CharacterState": "FightingFormsCharacterState",
 		"Position": "FightingFormsPosition",
+		"Status": "FightingFormsStatus",
+		"StunnedConfig": "FightingFormsStunnedConfig",
+		"DamageReductionConfig": "FightingFormsDamageReductionConfig",
+		"RefundOnDamageConfig": "FightingFormsRefundOnDamageConfig",
+		"JaugeType": "u8",
 		"CharacterClass": "FightingFormsCharacterClass",
 		"Game": "FightingFormsGame",
 		"AppliedEffect": "FightingFormsAppliedEffect",
 		"Effect": "FightingFormsEffect",
 		"CostConfig": "FightingFormsCostConfig",
-		"JaugeType": "u8",
 		"RestoreConfig": "FightingFormsRestoreConfig",
 		"MoveConfig": "FightingFormsMoveConfig",
 		"TeleportConfig": "FightingFormsTeleportConfig",
 		"DamageTileConfig": "FightingFormsDamageTileConfig",
+		"StatusTileConfig": "FightingFormsStatusTileConfig",
+		"ApplyStatusConfig": "FightingFormsApplyStatusConfig",
 		"Player": "FightingFormsPlayer"
 	},
 	"typespace": [
@@ -1589,6 +1717,16 @@
 						"algebraic_type": {
 							"U8": []
 						}
+					},
+					{
+						"name": {
+							"some": "status"
+						},
+						"algebraic_type": {
+							"Array": {
+								"Ref": 18.0
+							}
+						}
 					}
 				]
 			}
@@ -1610,6 +1748,154 @@
 						},
 						"algebraic_type": {
 							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "Stunned"
+						},
+						"algebraic_type": {
+							"Ref": 19.0
+						}
+					},
+					{
+						"name": {
+							"some": "DamageReduction"
+						},
+						"algebraic_type": {
+							"Ref": 20.0
+						}
+					},
+					{
+						"name": {
+							"some": "RefundOnDamage"
+						},
+						"algebraic_type": {
+							"Ref": 21.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "duration"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "amount"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "duration"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "only_once"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "jauge_type"
+						},
+						"algebraic_type": {
+							"Ref": 22.0
+						}
+					},
+					{
+						"name": {
+							"some": "only_once"
+						},
+						"algebraic_type": {
+							"Bool": []
+						}
+					},
+					{
+						"name": {
+							"some": "amount"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
+							"some": "duration"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Sum": {
+				"variants": [
+					{
+						"name": {
+							"some": "HP"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Mana"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
+						}
+					},
+					{
+						"name": {
+							"some": "Stamina"
+						},
+						"algebraic_type": {
+							"Product": {
+								"elements": []
+							}
 						}
 					}
 				]
@@ -1737,6 +2023,14 @@
 					},
 					{
 						"name": {
+							"some": "step"
+						},
+						"algebraic_type": {
+							"U8": []
+						}
+					},
+					{
+						"name": {
 							"some": "ending"
 						},
 						"algebraic_type": {
@@ -1776,7 +2070,7 @@
 						},
 						"algebraic_type": {
 							"Array": {
-								"Ref": 20.0
+								"Ref": 25.0
 							}
 						}
 					}
@@ -1791,7 +2085,7 @@
 							"some": "effect"
 						},
 						"algebraic_type": {
-							"Ref": 21.0
+							"Ref": 26.0
 						}
 					},
 					{
@@ -1821,7 +2115,7 @@
 							"some": "Cost"
 						},
 						"algebraic_type": {
-							"Ref": 22.0
+							"Ref": 27.0
 						}
 					},
 					{
@@ -1829,7 +2123,7 @@
 							"some": "Restore"
 						},
 						"algebraic_type": {
-							"Ref": 24.0
+							"Ref": 28.0
 						}
 					},
 					{
@@ -1837,7 +2131,7 @@
 							"some": "Move"
 						},
 						"algebraic_type": {
-							"Ref": 25.0
+							"Ref": 29.0
 						}
 					},
 					{
@@ -1845,7 +2139,7 @@
 							"some": "Teleport"
 						},
 						"algebraic_type": {
-							"Ref": 26.0
+							"Ref": 30.0
 						}
 					},
 					{
@@ -1853,7 +2147,23 @@
 							"some": "DamageTile"
 						},
 						"algebraic_type": {
-							"Ref": 27.0
+							"Ref": 31.0
+						}
+					},
+					{
+						"name": {
+							"some": "StatusTile"
+						},
+						"algebraic_type": {
+							"Ref": 32.0
+						}
+					},
+					{
+						"name": {
+							"some": "ApplyStatus"
+						},
+						"algebraic_type": {
+							"Ref": 33.0
 						}
 					}
 				]
@@ -1875,7 +2185,7 @@
 							"some": "jauge_type"
 						},
 						"algebraic_type": {
-							"Ref": 23.0
+							"Ref": 22.0
 						}
 					},
 					{
@@ -1890,42 +2200,6 @@
 			}
 		},
 		{
-			"Sum": {
-				"variants": [
-					{
-						"name": {
-							"some": "HP"
-						},
-						"algebraic_type": {
-							"Product": {
-								"elements": []
-							}
-						}
-					},
-					{
-						"name": {
-							"some": "Mana"
-						},
-						"algebraic_type": {
-							"Product": {
-								"elements": []
-							}
-						}
-					},
-					{
-						"name": {
-							"some": "Stamina"
-						},
-						"algebraic_type": {
-							"Product": {
-								"elements": []
-							}
-						}
-					}
-				]
-			}
-		},
-		{
 			"Product": {
 				"elements": [
 					{
@@ -1941,7 +2215,7 @@
 							"some": "jauge_type"
 						},
 						"algebraic_type": {
-							"Ref": 23.0
+							"Ref": 22.0
 						}
 					},
 					{
@@ -2024,6 +2298,50 @@
 						},
 						"algebraic_type": {
 							"U8": []
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "position"
+						},
+						"algebraic_type": {
+							"Ref": 17.0
+						}
+					},
+					{
+						"name": {
+							"some": "status"
+						},
+						"algebraic_type": {
+							"Ref": 18.0
+						}
+					}
+				]
+			}
+		},
+		{
+			"Product": {
+				"elements": [
+					{
+						"name": {
+							"some": "character_id"
+						},
+						"algebraic_type": {
+							"U64": []
+						}
+					},
+					{
+						"name": {
+							"some": "status"
+						},
+						"algebraic_type": {
+							"Ref": 18.0
 						}
 					}
 				]

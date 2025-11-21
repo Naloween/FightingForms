@@ -43,6 +43,21 @@ impl Direction {
             Direction::NorthWest => (-1, -1),
         }
     }
+
+    pub fn rotate(&self, times: i8) -> Direction {
+        let directions = vec![
+            Direction::North,
+            Direction::NorthWest,
+            Direction::West,
+            Direction::SouthWest,
+            Direction::South,
+            Direction::SouthEast,
+            Direction::East,
+            Direction::NorthEast,
+        ];
+        let index = directions.iter().position(|d| d == self).unwrap();
+        directions[((index as i8 + times) % directions.len() as i8) as usize].clone()
+    }
 }
 
 #[derive(SpacetimeType, PartialEq, Eq, Clone)]
@@ -61,6 +76,17 @@ impl CardinalDirection {
             CardinalDirection::South => (0, 1),
             CardinalDirection::West => (-1, 0),
         }
+    }
+
+    pub fn rotate(&self, times: i8) -> CardinalDirection {
+        let directions = vec![
+            CardinalDirection::North,
+            CardinalDirection::West,
+            CardinalDirection::South,
+            CardinalDirection::East,
+        ];
+        let index = directions.iter().position(|d| d == self).unwrap();
+        directions[((index as i8 + times) % directions.len() as i8) as usize].clone()
     }
 }
 

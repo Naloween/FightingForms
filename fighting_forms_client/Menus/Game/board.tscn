@@ -18,8 +18,6 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
-layout_mode = 2
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
-columns = 6
+[node name="Tiles" type="Node2D" parent="MarginContainer"]
+
+[node name="Characters" type="Node2D" parent="MarginContainer"]

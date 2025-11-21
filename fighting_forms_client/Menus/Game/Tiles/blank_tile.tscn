@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://dun7yyv3wiugk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lew8p"]
+bg_color = Color(0.8819366, 0.8819366, 0.88193655, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.09175373, 0.6604724, 0.74667704, 1)
+
+[node name="BlankTile" type="Node2D"]
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lew8p")

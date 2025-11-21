@@ -1,7 +1,7 @@
-use spacetimedb::{Identity, ReducerContext, SpacetimeType, Table};
+use spacetimedb::{Identity, ReducerContext, SpacetimeType};
 
 use crate::{
-    character::{character as character_trait, Character, CharacterState, JaugeType},
+    character::{character as character_trait, Character, CharacterState, JaugeType, Status},
     game::{game, Game},
     player::{player, Player},
     Direction, Position,
@@ -21,6 +21,8 @@ pub enum Effect {
     Move(MoveConfig),
     Teleport(TeleportConfig),
     DamageTile(DamageTileConfig),
+    StatusTile(StatusTileConfig),
+    ApplyStatus(ApplyStatusConfig),
 }
 
 #[derive(SpacetimeType, Clone)]
@@ -56,6 +58,18 @@ pub struct DamageTileConfig {
     pub amount: u8,
 }
 
+#[derive(SpacetimeType, Clone)]
+pub struct StatusTileConfig {
+    pub position: Position,
+    pub status: Status,
+}
+
+#[derive(SpacetimeType, Clone)]
+pub struct ApplyStatusConfig {
+    pub character_id: u64,
+    pub status: Status,
+}
+
 pub fn apply_effect_chain(
     ctx: &ReducerContext,
     effect_chain: Vec<Effect>,
@@ -73,6 +87,12 @@ pub fn apply_effect_chain(
                 Effect::Teleport(teleport_config) => teleport_effect(ctx, teleport_config),
                 Effect::DamageTile(damage_tile_config) => {
                     damage_tile_effect(ctx, damage_tile_config)
+                }
+                Effect::StatusTile(status_tile_config) => {
+                    status_tile_effect(ctx, status_tile_config)
+                }
+                Effect::ApplyStatus(apply_status_config) => {
+                    apply_status_effect(ctx, apply_status_config)
                 }
             };
             applied_effects.push(AppliedEffect {
@@ -103,14 +123,8 @@ pub fn cost_effect(ctx: &ReducerContext, config: CostConfig) -> bool {
             if character.current_state.hp < config.amount {
                 false
             } else {
-                ctx.db.character().id().update(Character {
-                    current_state: CharacterState {
-                        hp: character.current_state.hp - config.amount,
-                        ..character.current_state
-                    },
-                    ..character
-                });
-                true
+                apply_damage_character(ctx, character, config.amount);
+                return true;
             }
         }
         JaugeType::Mana => {
@@ -264,8 +278,71 @@ pub fn damage_tile_effect(ctx: &ReducerContext, config: DamageTileConfig) -> boo
     return true;
 }
 
+pub fn status_tile_effect(ctx: &ReducerContext, config: StatusTileConfig) -> bool {
+    // Apply status to any character on a the tile
+    let player = ctx.db.player().id().find(ctx.sender).unwrap();
+    for character in ctx.db.character().game_id().filter(player.game_id.unwrap()) {
+        if character.current_state.position == config.position {
+            apply_status_effect(
+                ctx,
+                ApplyStatusConfig {
+                    character_id: character.id,
+                    status: config.status.clone(),
+                },
+            );
+        }
+    }
+
+    return true;
+}
+
+pub fn apply_status_effect(ctx: &ReducerContext, config: ApplyStatusConfig) -> bool {
+    let character = ctx.db.character().id().find(config.character_id).unwrap();
+    ctx.db.character().id().update(Character {
+        current_state: CharacterState {
+            status: {
+                let mut new_status = character.current_state.status.clone();
+                new_status.push(config.status.clone());
+                new_status
+            },
+            ..character.current_state
+        },
+        ..character
+    });
+
+    return true;
+}
+
+// Utility functions
+
 fn apply_damage_character(ctx: &ReducerContext, character: Character, damage: u8) {
-    let mut new_hp = character.current_state.hp as i32 - damage as i32;
+    let mut new_damage = damage as i32;
+
+    let mut new_statuses: Vec<Status> = Vec::new();
+    for status in character.current_state.status.iter() {
+        if let Status::DamageReduction(damage_reduction_config) = status {
+            new_damage = 0.max(new_damage - damage_reduction_config.amount as i32);
+            if !damage_reduction_config.only_once {
+                new_statuses.push(status.clone());
+            }
+        } else if let Status::RefundOnDamage(refund_on_damage_config) = status {
+            restore_effect(
+                ctx,
+                RestoreConfig {
+                    character_id: character.id,
+                    jauge_type: refund_on_damage_config.jauge_type,
+                    amount: refund_on_damage_config.amount,
+                },
+            );
+            if !refund_on_damage_config.only_once {
+                new_statuses.push(status.clone());
+            }
+        } else {
+            new_statuses.push(status.clone());
+        }
+    }
+
+    let mut new_hp = character.current_state.hp as i32 - new_damage as i32;
 
     if new_hp <= 0 {
         new_hp = 0;
@@ -275,6 +352,7 @@ fn apply_damage_character(ctx: &ReducerContext, character: Character, damage: u8
     ctx.db.character().id().update(Character {
         current_state: CharacterState {
             hp: new_hp as u8,
+            status: new_statuses,
             ..character.current_state
         },
         ..character

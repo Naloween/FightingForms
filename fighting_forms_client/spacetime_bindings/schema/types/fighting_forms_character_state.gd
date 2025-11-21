@@ -10,6 +10,7 @@ class_name FightingFormsCharacterState extends Resource
 @export var max_hp: int 
 @export var max_mana: int 
 @export var max_stamina: int 
+@export var status: Array[FightingFormsStatus] 
 
 func _init() -> void:
 	set_meta('bsatn_type_position', &'FightingFormsPosition')
@@ -19,6 +20,7 @@ func _init() -> void:
 	set_meta('bsatn_type_max_hp', &'u8')
 	set_meta('bsatn_type_max_mana', &'u8')
 	set_meta('bsatn_type_max_stamina', &'u8')
+	set_meta('bsatn_type_status', &'FightingFormsStatus')
 
 ## 0. position: FightingFormsPosition[br]
 ## 1. hp: int[br]
@@ -27,7 +29,8 @@ func _init() -> void:
 ## 4. max_hp: int[br]
 ## 5. max_mana: int[br]
 ## 6. max_stamina: int[br]
-static func create(p_position: FightingFormsPosition, p_hp: int, p_mana: int, p_stamina: int, p_max_hp: int, p_max_mana: int, p_max_stamina: int) -> FightingFormsCharacterState:
+## 7. status: Array of FightingFormsStatus[br]
+static func create(p_position: FightingFormsPosition, p_hp: int, p_mana: int, p_stamina: int, p_max_hp: int, p_max_mana: int, p_max_stamina: int, p_status: Array[FightingFormsStatus]) -> FightingFormsCharacterState:
 	var result = FightingFormsCharacterState.new()
 	result.position = p_position
 	result.hp = p_hp
@@ -36,4 +39,5 @@ static func create(p_position: FightingFormsPosition, p_hp: int, p_mana: int, p_
 	result.max_hp = p_max_hp
 	result.max_mana = p_max_mana
 	result.max_stamina = p_max_stamina
+	result.status = p_status
 	return result
